@@ -1,0 +1,4 @@
+# package directories
+node_modules
+dist
+.vscode

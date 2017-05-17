@@ -1,0 +1,267 @@
+/****
+This CSS file contains common styles required for code runner panel. These styles are already present on gitlab(and have been extracted from there). It is only loaded for github.
+****/
+
+#runmycode-runner .form-control {
+  box-shadow: none;
+  border-radius: 2px;
+  padding: 6px 10px;
+  width: 100%;
+}
+
+#runmycode-runner .form-control[readonly] {
+  background-color: #f9f9f9;
+  opacity: 1;
+}
+
+/******************************************************************************/
+/* Run Button */
+/******************************************************************************/
+
+#runmycode-runner button,input,textarea {
+  color: inherit;
+  font: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0;
+}
+
+#runmycode-runner button {
+  overflow: visible;
+  text-transform: none;
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+
+#runmycode-runner .btn {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 3px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-radius: 3px;
+  padding: 6px 10px;
+  background-color: #fff;
+  border-color: #e5e5e5;
+  color: rgba(0,0,0,0.85);
+  transition: background-color 100ms linear, border-color 100ms linear, color 100ms linear, box-shadow 100ms linear;
+}
+
+#runmycode-runner .btn-warning {
+  color: #fff;
+  background-color: #fc9403;
+  border-color: #e38503;
+}
+
+/*.btn-lg,.btn-group-lg>.btn {
+  padding: 12px 20px;
+  font-size: 18px;
+  line-height: 1.3333333;
+  border-radius: 3px;
+}*/
+
+#runmycode-runner .btn-block {
+  display: block;
+  width: 100%;
+  margin: 0;
+  margin-bottom: 15px;
+}
+
+#runmycode-runner .btn-block.btn {
+  padding: 6px 0;
+}
+
+#runmycode-runner .btn.btn-warning {
+  background-color: #fc9403;
+  border-color: #de7e00;
+  color: #fff;
+}
+
+#runmycode-runner .btn.btn-warning:hover,.btn.btn-warning:focus {
+  background-color: #de7e00;
+  border-color: #c26700;
+  color: #fff;
+}
+
+#runmycode-runner .btn.btn-warning:active {
+  box-shadow: rgba(0,0,0,0.16);
+  background-color: #c26700;
+  border-color: #a35100;
+  color: #fff;
+}
+
+#runmycode-runner .btn-block.btn {
+    padding: 6px 0;
+}
+
+/******************************************************************************/
+/* Code Runner Popup Panel */
+/******************************************************************************/
+
+#runmycode-runner .close {
+  float: right;
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  opacity: 0.2;
+  filter: alpha(opacity=20);
+}
+
+#runmycode-runner .close:hover,.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+
+#runmycode-runner button.close {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  -webkit-appearance: none;
+}
+
+/*.btn.btn-close {
+  background-color: #fff;
+  color: #de7e00;
+  border-color: #fc9403;
+}
+
+.btn.btn-close:hover,.btn.btn-close:focus {
+  background-color: #fc9403;
+  border-color: #de7e00;
+  color: #fff;
+}
+
+.btn.btn-close:active {
+  background-color: #de7e00;
+  border-color: #c26700;
+  color: #fff;
+}*/
+
+#runmycode-runner .fade {
+  opacity: 0;
+  -webkit-transition: opacity 0.15s linear;
+  -o-transition: opacity 0.15s linear;
+  transition: opacity 0.15s linear
+}
+
+#runmycode-runner .fade.in {
+  opacity: 1
+}
+
+#runmycode-runner .collapse {
+  display: none
+}
+
+#runmycode-runner .collapse.in {
+  display: block
+}
+
+#runmycode-runner .panel {
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  box-shadow: none;
+  /*margin-bottom: 16px;*/
+}
+
+#runmycode-runner .panel-body {
+  padding: 16px;
+}
+
+#runmycode-runner .panel-body:before,.panel-body:after {
+  content: " ";
+  display: table;
+}
+
+#runmycode-runner .panel-body:after {
+  clear: both;
+}
+
+#runmycode-runner .panel-heading {
+  padding: 10px 15px;
+  border-bottom: 1px solid transparent;
+  border-top-right-radius: 1px;
+  border-top-left-radius: 1px;
+}
+
+#runmycode-runner .panel-title {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 16px;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+#runmycode-runner .panel-group .panel {
+  margin-bottom: 0;
+  border-radius: 2px;
+}
+
+#runmycode-runner .panel-group .panel+.panel {
+  margin-top: 5px;
+}
+
+#runmycode-runner .panel-group .panel-heading {
+  border-bottom: 0;
+}
+
+#runmycode-runner .panel-group .panel-heading+.panel-collapse>.panel-body {
+  border-top: 1px solid #e5e5e5;
+}
+
+#runmycode-runner .panel-default {
+  border-color: #e5e5e5;
+}
+
+#runmycode-runner .panel-default>.panel-heading {
+  /*color: rgba(0,0,0,0.85);*/
+  background-color: #fafafa;
+  border-color: #e5e5e5;
+}
+
+#runmycode-runner .panel-default>.panel-heading+.panel-collapse>.panel-body {
+  border-top-color: #e5e5e5;
+}
+
+/*.panel-warning {
+  border-color: #fc9403;
+}
+
+.panel-warning>.panel-heading {
+  color: #fff;
+  background-color: #fc9403;
+  border-color: #fc9403;
+}
+
+.panel-warning>.panel-heading+.panel-collapse>.panel-body {
+  border-top-color: #fc9403;
+}*/
+
+#runmycode-runner .panel .panel-heading {
+  padding: 6px 16px;
+  /*line-height: 36px;*/
+}
+
+/*#runmycode-runner .panel .panel-title {
+  font-size: inherit;
+  line-height: inherit;
+}*/

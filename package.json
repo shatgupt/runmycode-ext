@@ -1,0 +1,20 @@
+{
+  "name": "runmycode-ext",
+  "version": "1.0.0",
+  "description": "Browser extension to run code online from sites like Github, Gitlab",
+  "scripts": {
+    "test": "standard",
+    "build": "./build.js"
+  },
+  "author": "Shatrughn Gupta",
+  "license": "MIT",
+  "devDependencies": {
+    "standard": "^10.0.2"
+  },
+  "standard": {
+    "globals": [
+      "browser",
+      "fetch"
+    ]
+  }
+}
