@@ -1,7 +1,7 @@
 {
   "name": "runmycode-ext",
   "version": "1.0.0",
-  "description": "Browser extension to run code online from sites like Github, Gitlab",
+  "description": "Browser extension to run code online from sites like Github, Gitlab and more",
   "scripts": {
     "test": "standard",
     "build": "./build.js"

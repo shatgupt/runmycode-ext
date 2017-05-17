@@ -4,8 +4,9 @@ const config = {
   'manifest': {
     'common': {
       'name': 'RunMyCode Online',
+      'description': 'Run code online from sites like Github, Gitlab and more',
       'author': 'Shatrughn Gupta',
-      'description': 'Run code online from sites like Github, Gitlab',
+      'homepage_url': 'https://runmycode.online',
       'version': '1.0.0',
       'manifest_version': 2,
       'content_scripts': [
