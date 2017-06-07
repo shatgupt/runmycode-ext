@@ -21,7 +21,7 @@ const saveOptions = (e) => {
 
 const restoreOptions = () => {
   const setApiUrl = (result) => {
-    apiUrl.value = result['apiUrl'] || 'https://api.runmycode.online/v1'
+    apiUrl.value = result['apiUrl'] || 'https://api.runmycode.online/run'
   }
 
   const setApiKey = (result) => {
