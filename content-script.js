@@ -1,12 +1,7 @@
 'use strict'
 
-const $ = (selector) => {
-  return document.querySelector(selector)
-}
-
-const $$ = (selector) => {
-  return document.querySelectorAll(selector)
-}
+const $ = s => document.querySelector(s)
+const $$ = s => document.querySelectorAll(s)
 
 const extMap = {
   py: 'python',
@@ -14,20 +9,15 @@ const extMap = {
   js: 'nodejs',
   rb: 'ruby',
   php: 'php',
-  java: 'java',
+  // java: 'java',
   go: 'go'
 }
 
 const getCodeFromLines = (lines) => {
-  return [].map.call(lines, (line) => {
-    const text = line.innerText
-    if (text === '\n') {
-      return ''
-    }
-    return text
-  }).join('\n')
+  return [].map.call(lines, (line) => line.innerText === '\n' ? '' : line.innerText).join('\n')
 }
 
+const body = document.body
 const platformMap = {
   gitlab: {
     getPage: () => {
@@ -44,14 +34,10 @@ const platformMap = {
     },
     pages: {
       show: {
-        getCode: () => {
-          return getCodeFromLines($('.blob-content code').children)
-        }
+        getCode: () => getCodeFromLines($('.blob-content code').children)
       },
       edit: {
-        getCode: () => {
-          return getCodeFromLines($$('.ace_line'))
-        }
+        getCode: () => getCodeFromLines($$('.ace_line'))
       }
     }
   },
@@ -71,28 +57,21 @@ const platformMap = {
     },
     pages: {
       show: {
-        getCode: () => {
-          return getCodeFromLines($$('.blob-wrapper table td.blob-code'))
-        }
+        getCode: () => getCodeFromLines($$('.blob-wrapper table td.blob-code'))
       },
       edit: {
-        getCode: () => {
-          return $('.file-editor-textarea').value
-        }
+        getCode: () => $('.file-editor-textarea').value
       }
     }
   }
 }
 
 const platform = window.location.hostname.split('.').slice(-2, -1)
-const body = document.body
 let runnerAdded = false
 let ext, lang, page
 
 const initRunner = () => {
-  if (runnerAdded) {
-    return
-  }
+  if (runnerAdded) return
 
   platformMap[platform].injectRunButton()
   runnerAdded = true
@@ -100,93 +79,37 @@ const initRunner = () => {
 
   const runnerMarkup = `<style>
   #runmycode-runner {
-    display: none;
-    position: fixed;
-    left: 300px;
-    top: 210px;  /* set these so Chrome doesn't return 'auto' from getComputedStyle */
     width: ${runnerWidth}px;
-    z-index: 999;
-    background: white;
-    box-shadow: 5px 5px 10px #888888;
-  }
-
-  #runmycode-runner > .panel-body {
-    padding: 15px;
-  }
-
-  #runmycode-runner .panel-group {
-    margin: 0;
-  }
-
-  #runmycode-runner>#runmycode-runner-handle {
-    cursor: move;
-  }
-
-  #runmycode-runner .panel-heading {
-    cursor: pointer;
-    line-height: 27px;
-    color: #565d64;
-    background: #f5f5f5;
-  }
-
-  #runmycode-runner .panel-runner .panel-title {
-    font-size: 14px;
-  }
-
-  #runmycode-runner .panel-runner .panel-body {
-    padding: 0;
-  }
-
-  #runmycode-runner #runmycode {
-    margin: 0 0 15px 0;
-    padding: 10px 0;
-    font-weight: bold;
-    line-height: 1.3333333;
-    background-image: none;
-  }
-
-  #runmycode-runner #runmycode-run-output, #runmycode-runner #runmycode-run-input {
-    font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace;
-  }
-
-  #runmycode-runner textarea {
-    resize: both;
-  }
-
-  #runmycode-runner #runmycode:disabled {
-    color: rgba(36,41,46,0.4);
-    background-color: rgba(252,148,3,0.5);
-    box-shadow: none;
-    pointer-events: none !important;
-    cursor: not-allowed;
   }
   </style>
 
-  <div id="runmycode-runner" class="panel panel-default platform-${platform}">
-    <div id="runmycode-runner-handle" class="panel-heading">
-      <button id="runmycode-close-runner" type="button" class="close">x</button>
-      <h3 class="panel-title">Run My Code</h3>
-    </div>
-    <div class="panel-body">
-      <button id="runmycode" type="button" class="btn btn-warning btn-block btn-lg">Run</button>
-      <div class="panel-group">
-        <div class="panel panel-default panel-runner">
-          <div class="panel-heading">
-            <h4 class="panel-title">Input</h4>
-          </div>
-          <div class="panel-collapse collapse">
-            <div class="panel-body">
-              <textarea id="runmycode-run-input" placeholder="Input to Program" class="form-control"></textarea>
+  <div id="runmycode-runner">
+    <div class="panel panel-default">
+      <div id="runmycode-runner-handle" class="panel-heading">
+        <button id="runmycode-close-runner" type="button" class="close">x</button>
+        <h3 class="panel-title">Run My Code</h3>
+      </div>
+      <div class="panel-body">
+        <button id="runmycode" type="button" class="btn btn-warning btn-block btn-lg">Run</button>
+        <div class="panel-group">
+          <div class="panel panel-default panel-runner">
+            <div class="panel-heading">
+              <h4 class="panel-title">Input</h4>
+            </div>
+            <div class="panel-collapse collapse">
+              <div class="panel-body">
+                <textarea id="runmycode-run-input" placeholder="Command line input to Code" title="Special shell characters like & should be quoted"></textarea>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="panel panel-default panel-runner">
-          <div class="panel-heading">
-            <h4 class="panel-title">Output</h4>
-          </div>
-          <div class="panel-collapse collapse in">
-            <div class="panel-body">
-              <textarea id="runmycode-run-output" rows="4" placeholder="Output from Program" readonly="true" class="form-control"></textarea>
+          <div class="panel panel-default panel-runner">
+            <div class="panel-heading">
+              <h4 class="panel-title">Output</h4>
+            </div>
+            <div id="output-panel" class="panel-collapse collapse in">
+              <div class="panel-body">
+                <textarea id="runmycode-run-output" rows="4" placeholder="Output from Code" readonly="true"></textarea>
+              </div>
             </div>
           </div>
         </div>
@@ -197,8 +120,7 @@ const initRunner = () => {
   // inject runner styles and markup
   body.insertAdjacentHTML('afterbegin', runnerMarkup)
 
-/* *** Start Movable popup https://gist.github.com/akirattii/9165836 ****/
-
+  /* *** Start Movable popup https://gist.github.com/akirattii/9165836 ****/
   let runnerVisible = false
   const runner = $('#runmycode-runner')
   const runnerCloseBtn = $('#runmycode-close-runner')
@@ -207,7 +129,6 @@ const initRunner = () => {
   const runOutput = $('#runmycode-run-output')
 
   let runnerOffset = { x: 0, y: 0 }
-  // runner.style.top = '210px'
   runner.style.left = `${window.innerWidth - runnerWidth - 100}px` // have popup 100px from right edge
 
   runnerCloseBtn.addEventListener('click', (e) => {
@@ -245,8 +166,7 @@ const initRunner = () => {
       runner.style.display = 'block'
     }
   })
-
-/* *** End Movable popup ****/
+  /* *** End Movable popup ****/
 
   // collapse input, output panels
   Array.from($$('.panel-runner>.panel-heading')).forEach((el) => {
@@ -255,41 +175,48 @@ const initRunner = () => {
     })
   })
 
-  const onError = (error) => {
-    console.log(`Error: ${error}`)
-  }
-
   const callApi = (url, apiKey) => {
     fetch(url, {
       method: 'post',
       headers: {'x-api-key': apiKey},
       body: platformMap[platform]['pages'][page].getCode()
     })
-    .then((res) => { return res.json() })
+    .then(res => res.json())
     .then((resp) => {
-      console.log('JSON response', resp)
+      console.log('Run response', resp)
       if (resp.status === 'Successful') {
         runOutput.value = resp.stdout || resp.stderr
       } else {
-        // runOutput.value = JSON.stringify(resp, null, 2)
-        runOutput.value = resp.error
+        runOutput.classList.add('error')
+        runOutput.value = `Failed: ${resp.error}\n${resp.stdout}` // stdout for php which puts error in stdout
       }
       runBtn.disabled = false // enable run button
     })
-    .catch(onError)
+    .catch((error) => {
+      console.error('Error:', error)
+      runOutput.classList.add('error')
+      runOutput.value = 'Some error happened. Please try again later.' // what else do I know? :/
+      // run button is not enabled to prevent user from triggering this error again
+    })
   }
 
   runBtn.addEventListener('click', (e) => {
     runBtn.disabled = true // disable run button
     // console.log(`Running ${lang} code`)
-    runOutput.value = `Running ${lang} code`
+    runOutput.classList.remove('error')
+    runOutput.value = `Running ${lang} code...`
+    $('#output-panel').classList.add('in')
 
     const getApiUrl = browser.storage.local.get('apiUrl')
     const getApiKey = browser.storage.local.get('apiKey')
     Promise.all([getApiUrl, getApiKey]).then((result) => {
-      const url = `${result[0]['apiUrl']}/run/${lang}?args=${encodeURI(runInput.value)}`
+      const url = `${result[0]['apiUrl']}/${lang}?args=${encodeURIComponent(runInput.value)}`
       callApi(url, result[1]['apiKey'])
-    }, onError)
+    }, (error) => {
+      console.error('Error:', error)
+      runOutput.classList.add('error')
+      runOutput.value = 'Some error happened. Please try again later.' // what else do I know? :/
+    })
   })
 }
 
@@ -297,16 +224,12 @@ const updateLangPage = () => {
   ext = window.location.pathname.split('.').pop()
   lang = extMap[ext]
   page = platformMap[platform] ? platformMap[platform].getPage() : null
-  console.log('update page =>', ext, lang, page)
-  if (lang && page) {
-    initRunner()
-  }
+  // console.log('update page =>', ext, lang, page)
+  if (lang && page) initRunner()
 }
 
 // this is required because of single page apps like Github,
 // where url change and page load complete needs to be detected to init the runner
 browser.runtime.onMessage.addListener(msg => {
-  if (msg === 'pageUpdated') {
-    updateLangPage()
-  }
+  if (msg === 'pageUpdated') updateLangPage()
 })
