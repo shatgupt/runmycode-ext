@@ -8,6 +8,7 @@ const config = {
       'author': 'Shatrughn Gupta',
       'homepage_url': 'https://runmycode.online',
       'version': '1.0.0',
+      'icons': { '80': 'icon80.png' },
       'manifest_version': 2,
       'content_scripts': [
         {
@@ -45,7 +46,8 @@ const config = {
       'content-script.js',
       'options.html',
       'options.js',
-      'runmycode-panel.css'
+      'runmycode-panel.css',
+      'icon80.png'
     ]
   }
 }
