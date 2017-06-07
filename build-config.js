@@ -19,6 +19,7 @@ const config = {
         {
           'matches': ['https://gitlab.com/*'],
           'js': ['browser-polyfill.min.js', 'content-script.js'],
+          'css': ['runmycode-panel.css'],
           'run-at': 'document_idle'
         }
       ],
