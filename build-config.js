@@ -4,11 +4,12 @@ const config = {
   'manifest': {
     'common': {
       'name': 'RunMyCode Online',
+      'short_name': 'RunMyCode',
       'description': 'Run code online from sites like Github, Gitlab and more',
       'author': 'Shatrughn Gupta',
       'homepage_url': 'https://runmycode.online',
       'version': '1.0.0',
-      'icons': { '80': 'icon80.png' },
+      'icons': { '128': 'icon128.png' },
       'manifest_version': 2,
       'content_scripts': [
         {
@@ -47,7 +48,7 @@ const config = {
       'options.html',
       'options.js',
       'runmycode-panel.css',
-      'icon80.png'
+      'icon128.png'
     ]
   }
 }
