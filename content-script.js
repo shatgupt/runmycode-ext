@@ -108,7 +108,7 @@ const initRunner = () => {
             </div>
             <div id="output-panel" class="panel-collapse collapse in">
               <div class="panel-body">
-                <textarea id="runmycode-run-output" rows="4" placeholder="Output from Code" readonly="true"></textarea>
+                <textarea id="runmycode-run-output" rows="5" placeholder="Output from Code" readonly="true"></textarea>
               </div>
             </div>
           </div>
@@ -184,11 +184,16 @@ const initRunner = () => {
     .then(res => res.json())
     .then((resp) => {
       console.log('Run response', resp)
+      runOutput.classList.add('error')
       if (resp.status === 'Successful') {
+        runOutput.classList.remove('error')
         runOutput.value = resp.stdout || resp.stderr
+      } else if (resp.status === 'Failed' || resp.status === 'BadRequest') {
+        runOutput.value = `Failed: ${resp.error}${resp.stdout}` // stdout for php which puts error in stdout
+      } else if (resp.message === 'Forbidden') {
+        runOutput.value = 'Invalid API Key or URL in extension options.\nDefault URL is https://api.runmycode.online/run and your key should be available at https://runmycode.online after authenticating.'
       } else {
-        runOutput.classList.add('error')
-        runOutput.value = `Failed: ${resp.error}\n${resp.stdout}` // stdout for php which puts error in stdout
+        runOutput.value = 'Some error happened. Please try again later.' // what else do I know? :/
       }
       runBtn.disabled = false // enable run button
     })
@@ -196,7 +201,7 @@ const initRunner = () => {
       console.error('Error:', error)
       runOutput.classList.add('error')
       runOutput.value = 'Some error happened. Please try again later.' // what else do I know? :/
-      // run button is not enabled to prevent user from triggering this error again
+      runBtn.disabled = false // enable run button
     })
   }
 
@@ -210,8 +215,15 @@ const initRunner = () => {
     const getApiUrl = browser.storage.local.get('apiUrl')
     const getApiKey = browser.storage.local.get('apiKey')
     Promise.all([getApiUrl, getApiKey]).then((result) => {
-      const url = `${result[0]['apiUrl']}/${lang}?args=${encodeURIComponent(runInput.value)}`
-      callApi(url, result[1]['apiKey'])
+      const key = result[1]['apiKey']
+      if (!key) {
+        runOutput.classList.add('error')
+        runOutput.value = 'Please set the API key in the extension options as generated from https://runmycode.online'
+        runBtn.disabled = false
+      } else {
+        const url = `${result[0]['apiUrl']}/${lang}?args=${encodeURIComponent(runInput.value)}`
+        callApi(url, key)
+      }
     }, (error) => {
       console.error('Error:', error)
       runOutput.classList.add('error')
