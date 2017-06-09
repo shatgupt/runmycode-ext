@@ -215,13 +215,18 @@ const initRunner = () => {
     const getApiUrl = browser.storage.local.get('apiUrl')
     const getApiKey = browser.storage.local.get('apiKey')
     Promise.all([getApiUrl, getApiKey]).then((result) => {
+      const apiUrl = result[0]['apiUrl']
       const key = result[1]['apiKey']
-      if (!key) {
+      if (!apiUrl) {
         runOutput.classList.add('error')
-        runOutput.value = 'Please set the API key in the extension options as generated from https://runmycode.online'
+        runOutput.value = 'Please set the API URL in the extension options. Default is https://api.runmycode.online/run'
+        runBtn.disabled = false
+      } else if (!key) {
+        runOutput.classList.add('error')
+        runOutput.value = 'Please set the API key in the extension options as generated at https://runmycode.online'
         runBtn.disabled = false
       } else {
-        const url = `${result[0]['apiUrl']}/${lang}?args=${encodeURIComponent(runInput.value)}`
+        const url = `${apiUrl}/${lang}?args=${encodeURIComponent(runInput.value)}`
         callApi(url, key)
       }
     }, (error) => {
