@@ -10,7 +10,7 @@ const enableSave = () => {
 }
 
 const saveOptions = (e) => {
-  e.preventDefault()
+  if (e) e.preventDefault()
   browser.storage.local.set({
     'apiUrl': apiUrl.value,
     'apiKey': apiKey.value
@@ -20,23 +20,20 @@ const saveOptions = (e) => {
 }
 
 const restoreOptions = () => {
-  const setApiUrl = (result) => {
-    apiUrl.value = result['apiUrl'] || 'https://api.runmycode.online/run'
-  }
-
-  const setApiKey = (result) => {
-    apiKey.value = result['apiKey'] || ''
-  }
-
-  const onError = (error) => {
-    console.log(`Error: ${error}`)
-  }
-
-  browser.storage.local.get('apiUrl').then(setApiUrl, onError)
-  browser.storage.local.get('apiKey').then(setApiKey, onError)
+  const getApiUrl = browser.storage.local.get('apiUrl')
+  const getApiKey = browser.storage.local.get('apiKey')
+  Promise.all([getApiUrl, getApiKey])
+  .then((result) => {
+    apiUrl.value = result[0]['apiUrl'] || 'https://api.runmycode.online/run'
+    apiKey.value = result[1]['apiKey'] || ''
+    saveOptions()
+  })
+  .catch((error) => {
+    console.log('Error: ', error)
+  })
 }
 
 document.addEventListener('DOMContentLoaded', restoreOptions)
-saveBtn.onclick = saveOptions
-apiUrl.oninput = enableSave
-apiKey.oninput = enableSave
+saveBtn.addEventListener('click', saveOptions)
+apiUrl.addEventListener('input', enableSave)
+apiKey.addEventListener('input', enableSave)
