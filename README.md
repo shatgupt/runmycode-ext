@@ -4,8 +4,8 @@
 
 ## How to use
 
-1. First get an API key by authenticating at https://runmycode.online. To make sure it is working, run a sample code at https://runmycode.online/codesheet.html.
-2. Install the extension.
+1. First get an API key by authenticating at [RunMyCode Online](https://runmycode.online). To make sure it is working, run a sample code at [CodeSheet](https://runmycode.online/codesheet.html).
+2. Install the extension: [Chrome](https://chrome.google.com/webstore/detail/runmycode-online/iidcnkpdmnopbbkdmneglbelcefgfohf), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/runmycode-online)
 3. Copy key from RunMyCode Online dashboard and put it in extension API Key option and save it.
 4. Now you can browse to supported language code page in Github or Gitlab and you will see a `Run` button added to left of usual action buttons.
 5. Clicking that button will open a runner where you can input any command line args and then press the big orange `Run` button to run the code on the page.
