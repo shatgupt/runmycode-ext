@@ -2,6 +2,8 @@
 
 > Run code online from sites like Github, Gitlab and more
 
+![RunMyCode Online Screen](screenshot1.png?raw=true "RunMyCode Online Screen")
+
 ## How to use
 1. First get an API key by authenticating at [RunMyCode Online](https://runmycode.online). To make sure it is working, run a sample code at [CodeSheet](https://runmycode.online/codesheet.html).
 2. Install the extension: [Chrome](https://chrome.google.com/webstore/detail/runmycode-online/iidcnkpdmnopbbkdmneglbelcefgfohf), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/runmycode-online)
