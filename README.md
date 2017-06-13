@@ -27,5 +27,8 @@ Language is detected based on the file extension. So for executing Python 3 code
 1. Github
 2. Gitlab
 
+## Credits
+Icomoon.io for the icon.
+
 ## License
 [MIT](LICENSE)
