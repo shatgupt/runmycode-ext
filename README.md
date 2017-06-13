@@ -4,7 +4,7 @@
 
 ![RunMyCode Online Screen](screenshot1.png?raw=true "RunMyCode Online Screen")
 
-## How to use
+## How to Use
 1. First get an API key by authenticating at [RunMyCode Online](https://runmycode.online). To make sure it is working, run a sample code at [CodeSheet](https://runmycode.online/codesheet.html).
 2. Install the extension: [Chrome](https://chrome.google.com/webstore/detail/runmycode-online/iidcnkpdmnopbbkdmneglbelcefgfohf), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/runmycode-online)
 3. Copy key from [RunMyCode Online dashboard](https://runmycode.online/dashboard.html)(link needs authentication) and put it in extension's `API Key` option and save it.
@@ -12,7 +12,12 @@
 5. Clicking that button will open a runner where you can input any command line args and then press the big orange `Run` button to run the code on the page.
 6. You can also edit the code in Github or Gitlab page and make it run through the same `Run` button as above.
 
+## Supported Websites
+1. Github
+2. Gitlab
+
 ## Supported Languages
+Language is detected based on the file extension. So for executing Python3 code, you will need py3 extension.
 1. Nodejs 6
 2. Python 2
 3. Python 3
@@ -21,11 +26,18 @@
 6. Go
 7. Java 1.8 (not enabled in published version)
 
-Language is detected based on the file extension. So for executing Python 3 code, you will need py3 extension.
+## Supported Browsers
+Latest versions of following browsers:
+1. [Chrome](https://chrome.google.com/webstore/detail/runmycode-online/iidcnkpdmnopbbkdmneglbelcefgfohf)
+2. [Firefox](https://addons.mozilla.org/en-US/firefox/addon/runmycode-online)
+3. Opera (Not published on store yet)
+4. Edge (Technically, but currently giving some CSP issues)
 
-## Supported Websites
-1. Github
-2. Gitlab
+## Developing the Extension
+### Building
+Build generates `manifest.json`, creates a directory `dist/<browser>` and puts all the extension relevant files there.
+- Build for all supported browsers: `npm run build`
+- Build for a specific browser: `npm run build -- chrome|firefox|opera|edge`
 
 ## Credits
 Icomoon.io for the icon.
