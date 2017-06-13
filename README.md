@@ -1,6 +1,6 @@
 # RunMyCode Online Browser Extension
 
-> Run code online from sites like Github, Gitlab and more
+> Run code online from sites like Github, Gitlab and more - [https://runmycode.online](https://runmycode.online)
 
 ![RunMyCode Online Screen](screenshot1.png?raw=true "RunMyCode Online Screen")
 
@@ -26,3 +26,6 @@ Language is detected based on the file extension. So for executing Python 3 code
 ## Supported Websites
 1. Github
 2. Gitlab
+
+## License
+[MIT](LICENSE)
