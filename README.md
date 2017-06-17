@@ -1,8 +1,8 @@
 # RunMyCode Online Browser Extension
 
-> Run code online from sites like Github, Gitlab and more - [https://runmycode.online](https://runmycode.online)
+> Browser extension to run code online from sites like Github, Gitlab and more - [https://runmycode.online](https://runmycode.online)
 
-![RunMyCode Online Screen](screenshot1.png?raw=true "RunMyCode Online Screen")
+[![RunMyCode Online Screenshot](screenshot1.png?raw=true)](https://www.youtube.com/watch?v=iwz8n3v7QVY "RunMyCode Online")
 
 ## How to Use
 1. First get an API key by authenticating at [RunMyCode Online](https://runmycode.online). To make sure it is working, run a sample code at [CodeSheet](https://runmycode.online/codesheet.html).
