@@ -1,8 +1,16 @@
 'use strict'
 // pass message to contentscript that url has changed
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  // console.log('browser.tabs.onUpdated', changeInfo.status)
   if (changeInfo.status === 'complete') {
     browser.tabs.sendMessage(tabId, 'pageUpdated')
+  }
+})
+
+// Open the dashboard page on install so that extension can be configured automatically
+browser.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install') {
+    browser.tabs.create({
+      url: 'https://runmycode.online/dashboard.html?ext-install=1'
+    })
   }
 })

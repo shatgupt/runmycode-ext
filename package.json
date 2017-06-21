@@ -14,7 +14,9 @@
   "standard": {
     "globals": [
       "browser",
-      "fetch"
+      "fetch",
+      "localStorage",
+      "location"
     ]
   }
 }

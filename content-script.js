@@ -191,7 +191,7 @@ const initRunner = () => {
       } else if (resp.status === 'Failed' || resp.status === 'BadRequest') {
         runOutput.value = `Failed: ${resp.error}${resp.stdout}` // stdout for php which puts error in stdout
       } else if (resp.message === 'Forbidden') {
-        runOutput.value = 'Invalid API Key or URL in extension options.\nDefault URL is https://api.runmycode.online/run and your key should be available at https://runmycode.online after authenticating.'
+        runOutput.value = 'Invalid API Key or URL in extension options.\nDefault URL is https://api.runmycode.online/run and your key should be available at https://runmycode.online/dashboard.html after authenticating.'
       } else {
         runOutput.value = 'Some error happened. Please try again later.' // what else do I know? :/
       }
@@ -207,7 +207,6 @@ const initRunner = () => {
 
   runBtn.addEventListener('click', (e) => {
     runBtn.disabled = true // disable run button
-    // console.log(`Running ${lang} code`)
     runOutput.classList.remove('error')
     runOutput.value = `Running ${lang} code...`
     $('#output-panel').classList.add('in')
@@ -215,38 +214,56 @@ const initRunner = () => {
     const getApiUrl = browser.storage.local.get('apiUrl')
     const getApiKey = browser.storage.local.get('apiKey')
     Promise.all([getApiUrl, getApiKey]).then((result) => {
-      const apiUrl = result[0]['apiUrl']
+      let apiUrl = result[0]['apiUrl']
       const key = result[1]['apiKey']
       if (!apiUrl) {
-        runOutput.classList.add('error')
-        runOutput.value = 'Please set the API URL in the extension options. Default is https://api.runmycode.online/run'
-        runBtn.disabled = false
+        // set default value if not set
+        apiUrl = 'https://api.runmycode.online/run'
+        browser.storage.local.set({
+          'apiUrl': apiUrl
+        }).then(null, (err) => {
+          console.error('set apiUrl Error:', err)
+        })
       } else if (!key) {
         runOutput.classList.add('error')
         runOutput.value = 'Please set the API key in the extension options as generated at https://runmycode.online'
         runBtn.disabled = false
-      } else {
+      }
+      if (apiUrl && key) {
         const url = `${apiUrl}/${lang}?args=${encodeURIComponent(runInput.value)}`
         callApi(url, key)
       }
     }, (error) => {
-      console.error('Error:', error)
+      console.error('getCreds Error:', error)
       runOutput.classList.add('error')
       runOutput.value = 'Some error happened. Please try again later.' // what else do I know? :/
     })
   })
 }
 
-const updateLangPage = () => {
-  ext = window.location.pathname.split('.').pop()
+const handlePageUpdate = () => {
+  ext = location.pathname.split('.').pop()
   lang = extMap[ext]
   page = platformMap[platform] ? platformMap[platform].getPage() : null
-  // console.log('update page =>', ext, lang, page)
-  if (lang && page) initRunner()
+  if (location.hostname + location.pathname === 'runmycode.online/dashboard.html') {
+    let user = localStorage.getItem('runmycode')
+    if (user) {
+      user = JSON.parse(user)
+      browser.storage.local.set({
+        'apiKey': user.key
+      }).then(() => {
+        // console.log('from RunMyCode ext: Updated API Key')
+      }, (err) => {
+        console.error('set apiKey Error:', err)
+      })
+    }
+  } else if (lang && page) {
+    initRunner()
+  }
 }
 
 // this is required because of single page apps like Github,
 // where url change and page load complete needs to be detected to init the runner
 browser.runtime.onMessage.addListener(msg => {
-  if (msg === 'pageUpdated') updateLangPage()
+  if (msg === 'pageUpdated') handlePageUpdate()
 })

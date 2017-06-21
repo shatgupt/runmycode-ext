@@ -40,7 +40,7 @@ Build generates `manifest.json`, creates a directory `dist/<browser>` and puts a
 - Build for a specific browser: `npm run build -- chrome|firefox|opera|edge`
 
 ## Credits
-Icomoon.io for the icon.
+[Icomoon.io](https://icomoon.io) for the icon.
 
 ## License
 [MIT](LICENSE)
