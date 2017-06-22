@@ -245,21 +245,7 @@ const handlePageUpdate = () => {
   ext = location.pathname.split('.').pop()
   lang = extMap[ext]
   page = platformMap[platform] ? platformMap[platform].getPage() : null
-  if (location.hostname + location.pathname === 'runmycode.online/dashboard.html') {
-    let user = localStorage.getItem('runmycode')
-    if (user) {
-      user = JSON.parse(user)
-      browser.storage.local.set({
-        'apiKey': user.key
-      }).then(() => {
-        // console.log('from RunMyCode ext: Updated API Key')
-      }, (err) => {
-        console.error('set apiKey Error:', err)
-      })
-    }
-  } else if (lang && page) {
-    initRunner()
-  }
+  if (lang && page) initRunner()
 }
 
 // this is required because of single page apps like Github,
