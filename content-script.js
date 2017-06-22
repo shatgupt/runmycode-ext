@@ -13,6 +13,23 @@ const extMap = {
   go: 'go'
 }
 
+const locationMap = {
+  'github.com': 'github',
+  'gist.github.com': 'github_gist',
+  'gitlab.com': 'gitlab',
+  'gitlab.com/snippets': 'gitlab_snippets',
+  'bitbucket.org': 'bitbucket',
+  'bitbucket.org/snippets': 'bitbucket_snippets',
+  'gobyexample.com': 'gobyexample'
+}
+
+const getPlatform = () => {
+  const l = location.hostname + '/' + location.pathname.split('/')[1]
+  return locationMap[l] || locationMap[location.hostname]
+}
+
+const getLangFromPathExt = () => extMap[location.pathname.split('.').pop()]
+
 const getCodeFromLines = (lines) => {
   return [].map.call(lines, (line) => line.innerText === '\n' ? '' : line.innerText).join('\n')
 }
@@ -20,6 +37,7 @@ const getCodeFromLines = (lines) => {
 const body = document.body
 const platformMap = {
   gitlab: {
+    getLang: () => getLangFromPathExt(),
     getPage: () => {
       if (body.dataset.page === 'projects:blob:show') {
         return 'show'
@@ -42,6 +60,7 @@ const platformMap = {
     }
   },
   github: {
+    getLang: () => getLangFromPathExt(),
     getPage: () => {
       if (body.classList.contains('page-edit-blob')) {
         return 'edit'
@@ -63,12 +82,29 @@ const platformMap = {
         getCode: () => $('.file-editor-textarea').value
       }
     }
+  },
+  gobyexample: {
+    getLang: () => 'go',
+    getPage: () => {
+      if ($('body>div.example')) return 'show'
+    },
+    injectRunButton: () => {
+      const runBtn = $('.run')
+      runBtn.parentNode.setAttribute('href', '#')
+      runBtn.setAttribute('id', 'runmycode-popup-runner')
+    },
+    pages: {
+      show: {
+        // there are 2 tables on the page, first one has the code
+        getCode: () => getCodeFromLines($('table').querySelectorAll('.code>.highlight>pre'))
+      }
+    }
   }
 }
 
-const platform = window.location.hostname.split('.').slice(-2, -1)
+const platform = getPlatform()
 let runnerAdded = false
-let ext, lang, page
+let lang, page
 
 const initRunner = () => {
   if (runnerAdded) return
@@ -242,10 +278,13 @@ const initRunner = () => {
 }
 
 const handlePageUpdate = () => {
-  ext = location.pathname.split('.').pop()
-  lang = extMap[ext]
-  page = platformMap[platform] ? platformMap[platform].getPage() : null
-  if (lang && page) initRunner()
+  // console.log('platform:', platform)
+  if (platformMap[platform]) {
+    page = platformMap[platform].getPage()
+    lang = platformMap[platform].getLang()
+    // console.log('page:', page, ' lang:', lang)
+    if (lang && page) initRunner()
+  }
 }
 
 // this is required because of single page apps like Github,

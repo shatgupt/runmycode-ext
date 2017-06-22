@@ -8,14 +8,17 @@ const config = {
       'description': 'Run code online from sites like Github, Gitlab and more',
       'author': 'Shatrughn Gupta',
       'homepage_url': 'https://runmycode.online',
-      'version': '1.1.1',
+      'version': '1.2.0',
       'icons': { '128': 'icon128.png' },
       'manifest_version': 2,
       'content_scripts': [
         {
           'matches': [
             'https://github.com/*',
-            'https://gitlab.com/*'
+            'https://gist.github.com/*',
+            'https://gitlab.com/*',
+            'https://bitbucket.org/*',
+            'https://gobyexample.com/*'
           ],
           'js': ['browser-polyfill.min.js', 'content-script.js'],
           'css': ['runmycode-panel.css'],
