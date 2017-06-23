@@ -52,6 +52,10 @@
   font-weight: 600;
 }
 
+#runmycode-runner .panel-title>a {
+  color: inherit;
+}
+
 #runmycode-runner .panel-body {
   padding: 15px;
 }
