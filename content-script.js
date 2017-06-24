@@ -99,20 +99,32 @@ const platformMap = {
         getCode: () => getCodeFromLines($('table').querySelectorAll('.code>.highlight>pre'))
       }
     }
+  },
+  bitbucket: {
+    getLang: () => getLangFromPathExt(),
+    getPage: () => {
+      if ($('#editor-container>#source-view')) return 'show'
+    },
+    injectRunButton: () => {
+      $('.file-source-container>.toolbar>.secondary').insertAdjacentHTML('afterbegin', '<div class="aui-buttons"><button id="runmycode-popup-runner" class="aui-button aui-button-primary" style="font-weight: normal;">Run</button></div>')
+    },
+    pages: {
+      show: {
+        getCode: () => $('.code').textContent
+      }
+    }
   }
 }
 
 const platform = getPlatform()
-let runnerAdded = false
-let lang, page
+let lang, page, runner, runnerCloseBtn, runBtn, runInput, runOutput
+let runnerVisible = false
 
 const initRunner = () => {
-  if (runnerAdded) return
-
+  if ($('#runmycode-popup-runner')) return // Run button is already added
   platformMap[platform].injectRunButton()
-  runnerAdded = true
-  const runnerWidth = 350
 
+  const runnerWidth = 350
   const runnerMarkup = `<style>
   #runmycode-runner {
     width: ${runnerWidth}px;
@@ -154,26 +166,39 @@ const initRunner = () => {
   </div>
   `
   // inject runner styles and markup
-  body.insertAdjacentHTML('afterbegin', runnerMarkup)
+  let justRunBtnToBeInjected = false
+  if ($('#runmycode-runner')) justRunBtnToBeInjected = true
+  else body.insertAdjacentHTML('afterbegin', runnerMarkup)
 
   /* *** Start Movable popup https://gist.github.com/akirattii/9165836 ****/
-  let runnerVisible = false
-  const runner = $('#runmycode-runner')
-  const runnerCloseBtn = $('#runmycode-close-runner')
-  const runBtn = $('#runmycode')
-  const runInput = $('#runmycode-run-input')
-  const runOutput = $('#runmycode-run-output')
+  runner = $('#runmycode-runner')
+  runnerCloseBtn = $('#runmycode-close-runner')
+  runBtn = $('#runmycode')
+  runInput = $('#runmycode-run-input')
+  runOutput = $('#runmycode-run-output')
+
+  $('#runmycode-popup-runner').addEventListener('click', (e) => {
+    e.preventDefault()
+    if (runnerVisible) {
+      runnerCloseBtn.click()
+    } else {
+      runnerVisible = true
+      runner.style.display = 'block'
+    }
+  })
+  // injected Run btn and added click listener, no more work to do if justRunBtnToBeInjected
+  if (justRunBtnToBeInjected) return
 
   let runnerOffset = { x: 0, y: 0 }
   runner.style.left = `${(window.innerWidth - runnerWidth) / 2}px` // have popup in the center of the screen
 
-  runnerCloseBtn.addEventListener('click', (e) => {
+  runnerCloseBtn.addEventListener('click', () => {
     runner.style.display = 'none'
     runnerVisible = false
   })
   window.addEventListener('keydown', (e) => {
     if (e.keyCode === 27) { // if ESC key pressed
-      runnerCloseBtn.click(e)
+      runnerCloseBtn.click()
     }
   })
 
@@ -191,16 +216,6 @@ const initRunner = () => {
     runnerOffset.y = e.clientY - runner.offsetTop
     window.addEventListener('mousemove', popupMove, true)
     e.preventDefault() // disable text selection
-  })
-
-  $('#runmycode-popup-runner').addEventListener('click', (e) => {
-    e.preventDefault()
-    if (runnerVisible) {
-      runnerCloseBtn.click(e)
-    } else {
-      runnerVisible = true
-      runner.style.display = 'block'
-    }
   })
   /* *** End Movable popup ****/
 
@@ -277,12 +292,21 @@ const initRunner = () => {
   })
 }
 
+const cleanUpRunner = () => {
+  if (runner) {
+    runInput.value = ''
+    runOutput.value = ''
+    runnerCloseBtn.click()
+  }
+}
+
 const handlePageUpdate = () => {
   // console.log('platform:', platform)
   if (platformMap[platform]) {
     page = platformMap[platform].getPage()
     lang = platformMap[platform].getLang()
     // console.log('page:', page, ' lang:', lang)
+    cleanUpRunner()
     if (lang && page) initRunner()
   }
 }

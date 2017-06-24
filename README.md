@@ -15,8 +15,8 @@
 ## Supported Websites
 1. [Github](https://github.com/shatgupt/runmycode-test/blob/master/ruby.rb)
 2. [Gitlab](https://gitlab.com/shatgupt/runmycode-test/blob/master/ruby.rb)
-3. [Go by Example](https://gobyexample.com/hello-world)
-4. [BitBucket](https://bitbucket.org) (soon)
+3. [BitBucket](https://bitbucket.org/shatgupt/runmycode-test/src/c9cda15cb3fa1144e53f199e6ac6003ee5bdb25b/ruby.rb) - Editor not supported
+4. [Go by Example](https://gobyexample.com/hello-world)
 5. [Github Gist](https://gist.github.com) (soon)
 6. [Gitlab Snippets](https://gitlab.com/snippets) (soon)
 7. [BitBucket Snippets](https://bitbucket.org/snippets) (soon)
