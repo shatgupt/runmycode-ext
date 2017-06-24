@@ -48,5 +48,7 @@ Build generates `manifest.json`, creates a directory `dist/<browser>` and puts a
 ## Credits
 [Icomoon.io](https://icomoon.io) for the icon.
 
+[Intelli-Octo](https://github.com/pd4d10/intelli-octo) for the initial code scraping code.
+
 ## License
 [MIT](LICENSE)
