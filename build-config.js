@@ -8,7 +8,7 @@ const config = {
       'description': 'Run code online from sites like Github, Gitlab and more',
       'author': 'Shatrughn Gupta',
       'homepage_url': 'https://runmycode.online',
-      'version': '1.3.1',
+      'version': '1.3.2',
       'icons': { '128': 'icon128.png' },
       'manifest_version': 2,
       'content_scripts': [
@@ -41,9 +41,6 @@ const config = {
         'tabs',  // for detecting url change and page loading complete for SPA like Github
         'storage',  // for storing API URL and key
         'https://api.runmycode.online/' // for making CORS calls for code run and key gen/usage
-      ],
-      'optional_permissions': [
-        'https://*.amazonaws.com/'  // to allow for custom RunMyCode API deployment on AWS API Gateway
       ]
     }
   },
