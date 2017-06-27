@@ -39,6 +39,13 @@ Latest versions of following browsers:
 
 [Edge has a non-standard WebExtension implementation](https://github.com/mozilla/webextension-polyfill/issues/3)
 
+## Permissions Requested
+1. Permissions for the above [supported websites](#supported-websites) to allow extension to run code directly from there
+2. `runmycode.online` - To auto-configure the extension
+3. `api.runmycode.online` - To run code from the extension
+4. `tabs` - For detecting url change and page loading complete for single page apps like Github, Bitbucket
+5. `storage` - To store API URL and Key as extension options
+
 ## Developing the Extension
 ### Building
 Build generates `manifest.json`, creates a directory `dist/<browser>` and puts all the extension relevant files there.
