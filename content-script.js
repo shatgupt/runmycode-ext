@@ -28,16 +28,13 @@ const getPlatform = () => {
   return locationMap[l] || locationMap[location.hostname]
 }
 
+const getFilenameFromPath = () => location.pathname.split('/').pop()
 const getLangFromPathExt = () => extMap[location.pathname.split('.').pop()]
-
-const getCodeFromLines = (lines) => {
-  return [].map.call(lines, (line) => line.innerText === '\n' ? '' : line.innerText).join('\n')
-}
+const getCodeFromLines = (lines) => [].map.call(lines, (line) => line.innerText === '\n' ? '' : line.innerText).join('\n')
 
 const body = document.body
 const platformMap = {
   gitlab: {
-    getLang: () => getLangFromPathExt(),
     getPage: () => {
       if (body.dataset.page === 'projects:blob:show') {
         return 'show'
@@ -45,10 +42,11 @@ const platformMap = {
         return 'edit'
       }
     },
+    pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
     injectRunButton: () => {
       // file-actions on show page, file-buttons on edit
       const fileActions = $('.file-actions') || $('.file-buttons')
-      fileActions.insertAdjacentHTML('afterbegin', '<div class="btn-group"><a class="btn btn-sm" id="runmycode-popup-runner">Run</a></div>')
+      fileActions.insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm runmycode-popup-runner" data-filename="${getFilenameFromPath()}" data-lang="${getLangFromPathExt()}">Run</a></div>`)
     },
     pages: {
       show: {
@@ -60,7 +58,6 @@ const platformMap = {
     }
   },
   github: {
-    getLang: () => getLangFromPathExt(),
     getPage: () => {
       if (body.classList.contains('page-edit-blob')) {
         return 'edit'
@@ -71,8 +68,9 @@ const platformMap = {
         return 'show'
       }
     },
+    pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
     injectRunButton: () => {
-      $('.file-actions').insertAdjacentHTML('afterbegin', '<div class="BtnGroup"><a class="btn btn-sm BtnGroup-item" id="runmycode-popup-runner">Run</a></div>')
+      $('.file-actions').insertAdjacentHTML('afterbegin', `<div class="BtnGroup"><a class="btn btn-sm BtnGroup-item runmycode-popup-runner" data-filename="${getFilenameFromPath()}" data-lang="${getLangFromPathExt()}">Run</a></div>`)
     },
     pages: {
       show: {
@@ -84,14 +82,16 @@ const platformMap = {
     }
   },
   gobyexample: {
-    getLang: () => 'go',
     getPage: () => {
       if ($('body>div.example')) return 'show'
     },
+    pageHasSupportedLang: () => $('body>div.example') !== null,
     injectRunButton: () => {
-      const runBtn = $('.run')
-      runBtn.parentNode.setAttribute('href', '#')
-      runBtn.setAttribute('id', 'runmycode-popup-runner')
+      const openRunnerBtn = $('.run')
+      openRunnerBtn.parentNode.setAttribute('href', '#')
+      openRunnerBtn.classList.add('runmycode-popup-runner')
+      openRunnerBtn.dataset.filename = $('body>div.example').id + '.go'
+      openRunnerBtn.dataset.lang = 'go'
     },
     pages: {
       show: {
@@ -101,12 +101,12 @@ const platformMap = {
     }
   },
   bitbucket: {
-    getLang: () => getLangFromPathExt(),
     getPage: () => {
       if ($('#editor-container>#source-view')) return 'show'
     },
+    pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
     injectRunButton: () => {
-      $('.file-source-container>.toolbar>.secondary').insertAdjacentHTML('afterbegin', '<div class="aui-buttons"><button id="runmycode-popup-runner" class="aui-button aui-button-primary" style="font-weight: normal;">Run</button></div>')
+      $('.file-source-container>.toolbar>.secondary').insertAdjacentHTML('afterbegin', `<div class="aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${getFilenameFromPath()}" data-lang="${getLangFromPathExt()}">Run</button></div>`)
     },
     pages: {
       show: {
@@ -117,11 +117,10 @@ const platformMap = {
 }
 
 const platform = getPlatform()
-let lang, page, runner, runnerCloseBtn, runBtn, runInput, runOutput
-let runnerVisible = false
+let filename, lang, page, runner, runnerCloseBtn, runBtn, runInput, runOutput
 
 const initRunner = () => {
-  if ($('#runmycode-popup-runner')) return // Run button is already added
+  if ($('.runmycode-popup-runner')) return // Run button is already added
   platformMap[platform].injectRunButton()
 
   const runnerWidth = 350
@@ -131,7 +130,7 @@ const initRunner = () => {
   }
   </style>
 
-  <div id="runmycode-runner">
+  <div id="runmycode-runner" class="hidden">
     <div class="panel panel-default">
       <div id="runmycode-runner-handle" class="panel-heading">
         <button id="runmycode-close-runner" type="button" class="close">x</button>
@@ -177,14 +176,16 @@ const initRunner = () => {
   runInput = $('#runmycode-run-input')
   runOutput = $('#runmycode-run-output')
 
-  $('#runmycode-popup-runner').addEventListener('click', (e) => {
-    e.preventDefault()
-    if (runnerVisible) {
-      runnerCloseBtn.click()
-    } else {
-      runnerVisible = true
-      runner.style.display = 'block'
-    }
+  Array.from($$('.runmycode-popup-runner')).forEach((el) => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault()
+      runner.classList.remove('hidden')
+      lang = e.target.dataset.lang
+      filename = e.target.dataset.filename
+      runBtn.setAttribute('title', `Click to run ${filename}`)
+      runOutput.setAttribute('title', `Output from ${filename}`)
+      runOutput.setAttribute('placeholder', `Output from ${filename}`)
+    })
   })
   // injected Run btn and added click listener, no more work to do if justRunBtnToBeInjected
   if (justRunBtnToBeInjected) return
@@ -192,14 +193,10 @@ const initRunner = () => {
   let runnerOffset = { x: 0, y: 0 }
   runner.style.left = `${(window.innerWidth - runnerWidth) / 2}px` // have popup in the center of the screen
 
-  runnerCloseBtn.addEventListener('click', () => {
-    runner.style.display = 'none'
-    runnerVisible = false
-  })
+  runnerCloseBtn.addEventListener('click', () => runner.classList.add('hidden'))
   window.addEventListener('keydown', (e) => {
-    if (e.keyCode === 27) { // if ESC key pressed
-      runnerCloseBtn.click()
-    }
+    // if ESC key pressed
+    if (e.keyCode === 27) runnerCloseBtn.click()
   })
 
   const popupMove = (e) => {
@@ -226,6 +223,19 @@ const initRunner = () => {
     })
   })
 
+  const setRunning = () => {
+    runBtn.textContent = 'Running'
+    runBtn.disabled = true // disable run button
+    runOutput.classList.remove('error')
+    runOutput.value = `Running ${filename}`
+    $('#output-panel').classList.add('in')
+  }
+
+  const resetRunning = () => {
+    runBtn.textContent = 'Run'
+    runBtn.disabled = false // enable run button
+  }
+
   const callApi = (url, apiKey) => {
     fetch(url, {
       method: 'post',
@@ -246,22 +256,18 @@ const initRunner = () => {
       } else {
         runOutput.value = 'Some error happened. Please try again later.' // what else do I know? :/
       }
-      runBtn.disabled = false // enable run button
+      resetRunning()
     })
     .catch((error) => {
       console.error('Error:', error)
       runOutput.classList.add('error')
       runOutput.value = 'Some error happened. Please try again later.' // what else do I know? :/
-      runBtn.disabled = false // enable run button
+      resetRunning()
     })
   }
 
   runBtn.addEventListener('click', (e) => {
-    runBtn.disabled = true // disable run button
-    runOutput.classList.remove('error')
-    runOutput.value = `Running ${lang} code...`
-    $('#output-panel').classList.add('in')
-
+    setRunning()
     const getApiUrl = browser.storage.local.get('apiUrl')
     const getApiKey = browser.storage.local.get('apiKey')
     Promise.all([getApiUrl, getApiKey]).then((result) => {
@@ -278,7 +284,7 @@ const initRunner = () => {
       } else if (!key) {
         runOutput.classList.add('error')
         runOutput.value = 'Please set the API key in the extension options as generated at https://runmycode.online'
-        runBtn.disabled = false
+        resetRunning()
       }
       if (apiUrl && key) {
         const url = `${apiUrl}/${lang}?args=${encodeURIComponent(runInput.value)}`
@@ -288,11 +294,12 @@ const initRunner = () => {
       console.error('getCreds Error:', error)
       runOutput.classList.add('error')
       runOutput.value = 'Some error happened. Please try again later.' // what else do I know? :/
+      resetRunning()
     })
   })
 }
 
-const cleanUpRunner = () => {
+const clearRunner = () => {
   if (runner) {
     runInput.value = ''
     runOutput.value = ''
@@ -304,10 +311,9 @@ const handlePageUpdate = () => {
   // console.log('platform:', platform)
   if (platformMap[platform]) {
     page = platformMap[platform].getPage()
-    lang = platformMap[platform].getLang()
     // console.log('page:', page, ' lang:', lang)
-    cleanUpRunner()
-    if (lang && page) initRunner()
+    clearRunner()
+    if (page && platformMap[platform].pageHasSupportedLang()) initRunner()
   }
 }
 

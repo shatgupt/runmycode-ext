@@ -53,8 +53,7 @@ Build generates `manifest.json`, creates a directory `dist/<browser>` and puts a
 - Build for a specific browser: `npm run build -- chrome|firefox|opera|edge`
 
 ## Credits
-[Icomoon.io](https://icomoon.io) for the icon.
-
+[Icomoon.io](https://icomoon.io) for the icon.  
 [Intelli-Octo](https://github.com/pd4d10/intelli-octo) for the initial code scraping code.
 
 ## License
