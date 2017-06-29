@@ -15,11 +15,11 @@
 ## Supported Websites
 1. [Github](https://github.com/shatgupt/runmycode-test/blob/master/ruby.rb)
 2. [Gitlab](https://gitlab.com/shatgupt/runmycode-test/blob/master/ruby.rb)
-3. [BitBucket](https://bitbucket.org/shatgupt/runmycode-test/src/c9cda15cb3fa1144e53f199e6ac6003ee5bdb25b/ruby.rb) - Editor not supported
+3. [BitBucket](https://bitbucket.org/shatgupt/runmycode-test/src/c9cda15cb3fa1144e53f199e6ac6003ee5bdb25b/ruby.rb) - Editor not supported yet
 4. [Go by Example](https://gobyexample.com/hello-world)
-5. [Github Gist](https://gist.github.com) (soon)
-6. [Gitlab Snippets](https://gitlab.com/snippets) (soon)
-7. [BitBucket Snippets](https://bitbucket.org/snippets) (soon)
+5. [Github Gist](https://gist.github.com/shatgupt/b76ebbf67c6a38d0decb686ff230dd04)
+6. [Gitlab Snippets](https://gitlab.com/snippets/1664532)
+7. [BitBucket Snippets](https://bitbucket.org/snippets/shatgupt/jykE9)
 
 ## Supported Languages
 Language is detected based on the file extension. So for executing Python3 code, you will need py3 extension.
