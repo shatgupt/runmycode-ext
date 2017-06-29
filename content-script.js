@@ -113,6 +113,34 @@ const platformMap = {
         getCode: () => $('.code').textContent
       }
     }
+  },
+  gitlab_snippets: {
+    getPage: () => {
+      if (body.dataset.page === 'snippets:show') {
+        return 'show'
+      } else if (body.dataset.page === 'snippets:edit') {
+        return 'edit'
+      }
+    },
+    pageHasSupportedLang: () => {
+      for (let f of Array.from($$('.file-holder .file-title-name'))) {
+        if (extMap[f.textContent.trim().split('.').pop()]) return true
+      }
+      return false
+    },
+    injectRunButton: () => {
+      for (let fh of Array.from($$('.file-holder'))) {
+        const _filename = fh.querySelector('.file-title-name').textContent.trim()
+        const _lang = extMap[_filename.split('.').pop()]
+        if (!_lang) continue // nothing to do if lang not supported
+        fh.querySelector('.file-actions').insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}">Run</a></div>`)
+      }
+    },
+    pages: {
+      show: {
+        getCode: () => getCodeFromLines($('.blob-content code').children)
+      }
+    }
   }
 }
 
