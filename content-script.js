@@ -30,6 +30,7 @@ const getPlatform = () => {
 
 const getFilenameFromPath = () => location.pathname.split('/').pop()
 const getLangFromPathExt = () => extMap[location.pathname.split('.').pop()]
+// CodeMirror adds this invisible character if empty lines
 const invisibleSpaceUsedByCodeMirror = (() => {
   const el = document.createElement('div')
   el.innerHTML = '&#8203;'
@@ -37,7 +38,7 @@ const invisibleSpaceUsedByCodeMirror = (() => {
 })()
 const getCodeFromLines = (lines) => [].map.call(lines, (line) => line.innerText.replace(invisibleSpaceUsedByCodeMirror, '\n') === '\n' ? '' : line.innerText).join('\n')
 
-let codeContainer // this element will some where contain the code to execute
+let codeContainer // this element somewhere contains the code to execute
 const body = document.body
 const platformMap = {
   gitlab: {
@@ -472,10 +473,10 @@ const clearRunner = () => {
 }
 
 const handlePageUpdate = () => {
-  console.log('platform:', platform)
+  // console.log('platform:', platform)
   if (platformMap[platform]) {
     page = platformMap[platform].getPage()
-    console.log('page:', page)
+    // console.log('page:', page)
     clearRunner()
     if (page && platformMap[platform]['pages'][page].pageHasSupportedLang()) initRunner()
   }
