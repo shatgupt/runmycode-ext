@@ -30,7 +30,12 @@ const getPlatform = () => {
 
 const getFilenameFromPath = () => location.pathname.split('/').pop()
 const getLangFromPathExt = () => extMap[location.pathname.split('.').pop()]
-const getCodeFromLines = (lines) => [].map.call(lines, (line) => line.innerText === '\n' ? '' : line.innerText).join('\n')
+const invisibleSpaceUsedByCodeMirror = (() => {
+  const el = document.createElement('div')
+  el.innerHTML = '&#8203;'
+  return el.textContent
+})()
+const getCodeFromLines = (lines) => [].map.call(lines, (line) => line.innerText.replace(invisibleSpaceUsedByCodeMirror, '\n') === '\n' ? '' : line.innerText).join('\n')
 
 let codeContainer // this element will some where contain the code to execute
 const body = document.body
@@ -108,7 +113,7 @@ const platformMap = {
         },
         // there are 2 tables on the page, first one has the code
         getCodeContainer: openRunnerBtn => openRunnerBtn.closest('table'),
-        getCode: () => getCodeFromLines($('.code>.highlight>pre', codeContainer))
+        getCode: () => getCodeFromLines($$('.code>.highlight>pre', codeContainer))
       }
     }
   },
@@ -219,6 +224,53 @@ const platformMap = {
         },
         getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.file'),
         getCode: () => $('.file-editor-textarea', codeContainer).value
+      }
+    }
+  },
+  bitbucket_snippets: {
+    getPage: () => {
+      if ($('#view-snippet')) {
+        return 'show'
+      } else if ($('.snippet-form .snippets-file-editors')) {
+        return 'edit'
+      }
+    },
+    pages: {
+      show: {
+        pageHasSupportedLang: () => {
+          for (let f of Array.from($$('#repo-content .bb-content-container-header-primary'))) {
+            if (extMap[f.textContent.trim().split('.').pop()]) return true
+          }
+          return false
+        },
+        injectRunButton: () => {
+          for (let fh of Array.from($$('#repo-content .bb-content-container.bb-row'))) {
+            const _filename = $('.bb-content-container-header-primary', fh).textContent.trim()
+            const _lang = extMap[_filename.split('.').pop()]
+            if (!_lang) continue // nothing to do if lang not supported
+            $('.bb-content-container-header-secondary', fh).insertAdjacentHTML('afterbegin', `<div class="aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${_filename}" data-lang="${_lang}">Run</button></div>`)
+          }
+        },
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.bb-content-container.bb-row'),
+        getCode: () => $('.code', codeContainer).textContent
+      },
+      edit: {
+        pageHasSupportedLang: () => {
+          for (let f of Array.from($$('.snippets-code-editor .code-editor-path-view-input'))) {
+            if (extMap[f.value.split('.').pop()]) return true
+          }
+          return false
+        },
+        injectRunButton: () => {
+          for (let fh of Array.from($$('.snippets-code-editor'))) {
+            const _filename = $('.code-editor-path-view-input', fh).value
+            const _lang = extMap[_filename.split('.').pop()]
+            if (!_lang) continue // nothing to do if lang not supported
+            $('.bb-content-container-header-primary', fh).insertAdjacentHTML('beforeend', `<div class="bb-content-container-item aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${_filename}" data-lang="${_lang}">Run</button></div>`)
+          }
+        },
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.snippets-code-editor'),
+        getCode: () => getCodeFromLines($$('pre.CodeMirror-line>span', codeContainer))
       }
     }
   }
