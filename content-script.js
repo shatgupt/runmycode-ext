@@ -1,7 +1,7 @@
 'use strict'
 
-const $ = s => document.querySelector(s)
-const $$ = s => document.querySelectorAll(s)
+const $ = (s, el = document) => el.querySelector(s)
+const $$ = (s, el = document) => el.querySelectorAll(s)
 
 const extMap = {
   py: 'python',
@@ -32,6 +32,7 @@ const getFilenameFromPath = () => location.pathname.split('/').pop()
 const getLangFromPathExt = () => extMap[location.pathname.split('.').pop()]
 const getCodeFromLines = (lines) => [].map.call(lines, (line) => line.innerText === '\n' ? '' : line.innerText).join('\n')
 
+let codeContainer // this element will some where contain the code to execute
 const body = document.body
 const platformMap = {
   gitlab: {
@@ -61,7 +62,7 @@ const platformMap = {
     getPage: () => {
       if (body.classList.contains('page-edit-blob')) {
         return 'edit'
-      } else if (body.classList.contains('page-blob') || $('.blob-wrapper table td.blob-code')) {
+      } else if (body.classList.contains('page-blob') || $('.file .blob-wrapper')) {
         // Second check because when you go from list page to code blob page,
         // page-blob class does not seem to be added.
         // It is added when that code blob page url is directly opened or refreshed
@@ -130,15 +131,50 @@ const platformMap = {
     },
     injectRunButton: () => {
       for (let fh of Array.from($$('.file-holder'))) {
-        const _filename = fh.querySelector('.file-title-name').textContent.trim()
+        const _filename = $('.file-title-name', fh).textContent.trim()
         const _lang = extMap[_filename.split('.').pop()]
         if (!_lang) continue // nothing to do if lang not supported
-        fh.querySelector('.file-actions').insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}">Run</a></div>`)
+        $('.file-actions', fh).insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}">Run</a></div>`)
       }
     },
     pages: {
       show: {
         getCode: () => getCodeFromLines($('.blob-content code').children)
+      }
+    }
+  },
+  github_gist: {
+    getPage: () => {
+      if (body.classList.contains('page-gist-edit')) {
+        return 'edit'
+      } else if (body.classList.contains('page-blob') || $('.file .blob-wrapper')) {
+        // Second check because when you go from list page to code blob page,
+        // page-blob class does not seem to be added.
+        // It is added when that code blob page url is directly opened or refreshed
+        return 'show'
+      }
+    },
+    pageHasSupportedLang: () => {
+      for (let f of Array.from($$('.file-info .gist-blob-name'))) {
+        if (extMap[f.textContent.trim().split('.').pop()]) return true
+      }
+      return false
+    },
+    injectRunButton: () => {
+      for (let fh of Array.from($$('.file'))) {
+        const _filename = $('.gist-blob-name', fh).textContent.trim()
+        const _lang = extMap[_filename.split('.').pop()]
+        if (!_lang) continue // nothing to do if lang not supported
+        $('.file-actions', fh).insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}">Run</a></div>`)
+      }
+    },
+    pages: {
+      show: {
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.file'),
+        getCode: () => $("textarea[name='gist[content]']", codeContainer).value
+      },
+      edit: {
+        getCode: () => $('.file-editor-textarea').value
       }
     }
   }
@@ -208,8 +244,12 @@ const initRunner = () => {
     el.addEventListener('click', (e) => {
       e.preventDefault()
       runner.classList.remove('hidden')
-      lang = e.target.dataset.lang
-      filename = e.target.dataset.filename
+      const openRunnerBtn = e.target
+      codeContainer = platformMap[platform]['pages'][page].getCodeContainer(openRunnerBtn)
+      lang = openRunnerBtn.dataset.lang
+      filename = openRunnerBtn.dataset.filename
+      runInput.value = ''
+      runOutput.value = ''
       runBtn.setAttribute('title', `Click to run ${filename}`)
       runOutput.setAttribute('title', `Output from ${filename}`)
       runOutput.setAttribute('placeholder', `Output from ${filename}`)
@@ -336,10 +376,10 @@ const clearRunner = () => {
 }
 
 const handlePageUpdate = () => {
-  // console.log('platform:', platform)
+  console.log('platform:', platform)
   if (platformMap[platform]) {
     page = platformMap[platform].getPage()
-    // console.log('page:', page, ' lang:', lang)
+    console.log('page:', page, ' lang:', lang)
     clearRunner()
     if (page && platformMap[platform].pageHasSupportedLang()) initRunner()
   }
