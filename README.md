@@ -2,13 +2,13 @@
 
 > Browser extension to run code online from sites like Github, Gitlab and more - [https://runmycode.online](https://runmycode.online)
 
-[![RunMyCode Online Screenshot](screenshot1.png?raw=true)](https://www.youtube.com/watch?v=iwz8n3v7QVY "RunMyCode Online")
+[![RunMyCode Online Screenshot](screenshot1.png?raw=true)](https://www.youtube.com/watch?v=iwz8n3v7QVY "Click to see RunMyCode Online Introduction video on YouTube")
 
 ## How to Use
 1. Install the extension: [Chrome](https://chrome.google.com/webstore/detail/runmycode-online/iidcnkpdmnopbbkdmneglbelcefgfohf), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/runmycode-online)
 2. On extension install, [RunMyCode Online](https://runmycode.online) will open in a new tab and prompt you to authenticate to get a key.
 3. On authenticating with any the of providers, you will be redirected to dashboard page and extension will be auto-configured with your key.
-4. Now you can go to any [supported language](#supported-languages) code page on Github or Gitlab and you will see a `Run` button added to left of usual action buttons (see screenshot above). For example, you can test the extension with [this Ruby code on Github](https://github.com/shatgupt/runmycode-test/blob/master/ruby.rb).
+4. Now you can go to any [supported language](#supported-languages) code page on Github or Gitlab and you will see a colored `Run` button added to left of usual action buttons (see screenshot above). For example, you can test the extension with [this Ruby code on Github](https://github.com/shatgupt/runmycode-test/blob/master/ruby.rb).
 5. Clicking that `Run` button will open a runner where you can input any command line args and then press the big orange `Run` button to run the code on the page.
 6. You can also edit the code using the web editor on Github or Gitlab and make it run through the same `Run` button as above.
 
