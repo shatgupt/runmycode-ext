@@ -1,6 +1,5 @@
 #runmycode-runner {
   color: #565d64;
-  display: none;
   position: fixed;
   top: 150px;
   /* set these so Chrome doesn't return 'auto' from getComputedStyle */
@@ -55,6 +54,11 @@
 
 #runmycode-runner .panel-title>a {
   color: inherit;
+  text-decoration: none;
+}
+
+#runmycode-runner .panel-title>a:hover {
+  text-decoration: underline;
 }
 
 #runmycode-runner .panel-body {
@@ -116,16 +120,13 @@
   color: #fff;
 }
 
-#runmycode-runner .btn-warning:hover {
-  background-color: #de7e00;
-}
-
 #runmycode-runner .btn-warning:active {
   background-color: #c26700;
 }
 
 #runmycode:disabled {
-  color: rgba(36, 41, 46, 0.4);
+  color: #696969;
+  font-weight: normal;
   background-color: rgba(252, 148, 3, 0.5);
   box-shadow: none;
   pointer-events: none !important;
@@ -159,4 +160,8 @@
 #runmycode-run-output {
   resize: both;
   min-height: 90px;
+}
+
+.hidden {
+  display: none;
 }

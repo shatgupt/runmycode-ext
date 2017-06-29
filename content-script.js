@@ -1,7 +1,7 @@
 'use strict'
 
-const $ = s => document.querySelector(s)
-const $$ = s => document.querySelectorAll(s)
+const $ = (s, el = document) => el.querySelector(s)
+const $$ = (s, el = document) => el.querySelectorAll(s)
 
 const extMap = {
   py: 'python',
@@ -28,16 +28,20 @@ const getPlatform = () => {
   return locationMap[l] || locationMap[location.hostname]
 }
 
+const getFilenameFromPath = () => location.pathname.split('/').pop()
 const getLangFromPathExt = () => extMap[location.pathname.split('.').pop()]
+// CodeMirror adds this invisible character if empty lines
+const invisibleSpaceUsedByCodeMirror = (() => {
+  const el = document.createElement('div')
+  el.innerHTML = '&#8203;'
+  return el.textContent
+})()
+const getCodeFromLines = (lines) => [].map.call(lines, (line) => line.innerText.replace(invisibleSpaceUsedByCodeMirror, '\n') === '\n' ? '' : line.innerText).join('\n')
 
-const getCodeFromLines = (lines) => {
-  return [].map.call(lines, (line) => line.innerText === '\n' ? '' : line.innerText).join('\n')
-}
-
+let codeContainer // this element somewhere contains the code to execute
 const body = document.body
 const platformMap = {
   gitlab: {
-    getLang: () => getLangFromPathExt(),
     getPage: () => {
       if (body.dataset.page === 'projects:blob:show') {
         return 'show'
@@ -48,23 +52,28 @@ const platformMap = {
     injectRunButton: () => {
       // file-actions on show page, file-buttons on edit
       const fileActions = $('.file-actions') || $('.file-buttons')
-      fileActions.insertAdjacentHTML('afterbegin', '<div class="btn-group"><a class="btn btn-sm" id="runmycode-popup-runner">Run</a></div>')
+      fileActions.insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm btn-warning runmycode-popup-runner" data-filename="${getFilenameFromPath()}" data-lang="${getLangFromPathExt()}">Run</a></div>`)
     },
     pages: {
       show: {
-        getCode: () => getCodeFromLines($('.blob-content code').children)
+        pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
+        injectRunButton: () => platformMap.gitlab.injectRunButton(),
+        getCodeContainer: () => body,
+        getCode: () => getCodeFromLines($('.blob-content code', codeContainer).children)
       },
       edit: {
-        getCode: () => getCodeFromLines($$('.ace_line'))
+        pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
+        injectRunButton: () => platformMap.gitlab.injectRunButton(),
+        getCodeContainer: () => body,
+        getCode: () => getCodeFromLines($$('.ace_line', codeContainer))
       }
     }
   },
   github: {
-    getLang: () => getLangFromPathExt(),
     getPage: () => {
       if (body.classList.contains('page-edit-blob')) {
         return 'edit'
-      } else if (body.classList.contains('page-blob') || $('.blob-wrapper table td.blob-code')) {
+      } else if (body.classList.contains('page-blob') || $('.file .blob-wrapper')) {
         // Second check because when you go from list page to code blob page,
         // page-blob class does not seem to be added.
         // It is added when that code blob page url is directly opened or refreshed
@@ -72,57 +81,208 @@ const platformMap = {
       }
     },
     injectRunButton: () => {
-      $('.file-actions').insertAdjacentHTML('afterbegin', '<div class="BtnGroup"><a class="btn btn-sm BtnGroup-item" id="runmycode-popup-runner">Run</a></div>')
+      $('.file-actions').insertAdjacentHTML('afterbegin', `<div class="BtnGroup"><a class="btn btn-sm BtnGroup-item btn-purple runmycode-popup-runner" data-filename="${getFilenameFromPath()}" data-lang="${getLangFromPathExt()}">Run</a></div>`)
     },
     pages: {
       show: {
-        getCode: () => getCodeFromLines($$('.blob-wrapper table td.blob-code'))
+        pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
+        injectRunButton: () => platformMap.github.injectRunButton(),
+        getCodeContainer: () => body,
+        getCode: () => getCodeFromLines($$('.blob-wrapper table td.blob-code', codeContainer))
       },
       edit: {
-        getCode: () => $('.file-editor-textarea').value
+        pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
+        injectRunButton: () => platformMap.github.injectRunButton(),
+        getCodeContainer: () => body,
+        getCode: () => $('.file-editor-textarea', codeContainer).value
       }
     }
   },
   gobyexample: {
-    getLang: () => 'go',
     getPage: () => {
       if ($('body>div.example')) return 'show'
     },
-    injectRunButton: () => {
-      const runBtn = $('.run')
-      runBtn.parentNode.setAttribute('href', '#')
-      runBtn.setAttribute('id', 'runmycode-popup-runner')
-    },
     pages: {
       show: {
+        pageHasSupportedLang: () => $('body>div.example') !== null,
+        injectRunButton: () => {
+          const openRunnerBtn = $('.run')
+          openRunnerBtn.parentNode.setAttribute('href', '#')
+          openRunnerBtn.classList.add('runmycode-popup-runner')
+          openRunnerBtn.dataset.filename = $('body>div.example').id + '.go'
+          openRunnerBtn.dataset.lang = 'go'
+        },
         // there are 2 tables on the page, first one has the code
-        getCode: () => getCodeFromLines($('table').querySelectorAll('.code>.highlight>pre'))
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('table'),
+        getCode: () => getCodeFromLines($$('.code>.highlight>pre', codeContainer))
       }
     }
   },
   bitbucket: {
-    getLang: () => getLangFromPathExt(),
     getPage: () => {
       if ($('#editor-container>#source-view')) return 'show'
     },
-    injectRunButton: () => {
-      $('.file-source-container>.toolbar>.secondary').insertAdjacentHTML('afterbegin', '<div class="aui-buttons"><button id="runmycode-popup-runner" class="aui-button aui-button-primary" style="font-weight: normal;">Run</button></div>')
+    pages: {
+      show: {
+        pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
+        injectRunButton: () => {
+          $('.file-source-container>.toolbar>.secondary').insertAdjacentHTML('afterbegin', `<div class="aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${getFilenameFromPath()}" data-lang="${getLangFromPathExt()}">Run</button></div>`)
+        },
+        getCodeContainer: () => body,
+        getCode: () => $('.code', codeContainer).textContent
+      }
+    }
+  },
+  gitlab_snippets: {
+    getPage: () => {
+      if (body.dataset.page === 'snippets:show') {
+        return 'show'
+      } else if (body.dataset.page === 'snippets:edit') {
+        return 'edit'
+      }
     },
     pages: {
       show: {
-        getCode: () => $('.code').textContent
+        pageHasSupportedLang: () => {
+          for (let f of Array.from($$('.file-holder .file-title-name'))) {
+            if (extMap[f.textContent.trim().split('.').pop()]) return true
+          }
+          return false
+        },
+        injectRunButton: () => {
+          for (let fh of Array.from($$('.file-holder'))) {
+            const _filename = $('.file-title-name', fh).textContent.trim()
+            const _lang = extMap[_filename.split('.').pop()]
+            if (!_lang) continue // nothing to do if lang not supported
+            $('.file-actions', fh).insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm btn-warning runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}">Run</a></div>`)
+          }
+        },
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.file-holder'),
+        getCode: () => getCodeFromLines($('.blob-content code', codeContainer).children)
+      },
+      edit: {
+        pageHasSupportedLang: () => {
+          for (let f of Array.from($$('.file-holder .snippet-file-name'))) {
+            if (extMap[f.value.split('.').pop()]) return true
+          }
+          return false
+        },
+        injectRunButton: () => {
+          // only one file in gitlab snippets for now
+          const _filename = $('.file-holder .snippet-file-name').value
+          const _lang = extMap[_filename.split('.').pop()]
+          $('.snippet-form .form-actions').insertAdjacentHTML('afterbegin', `<input type="button" class="btn btn-warning runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}" value="Run">`)
+        },
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.form-actions').previousElementSibling,
+        getCode: () => getCodeFromLines($$('.ace_line', codeContainer))
+      }
+    }
+  },
+  github_gist: {
+    getPage: () => {
+      if (body.classList.contains('page-gist-edit')) {
+        return 'edit'
+      } else if (body.classList.contains('page-blob') || $('.file .blob-wrapper')) {
+        // Second check because when you go from list page to code blob page,
+        // page-blob class does not seem to be added.
+        // It is added when that code blob page url is directly opened or refreshed
+        return 'show'
+      }
+    },
+    pages: {
+      show: {
+        pageHasSupportedLang: () => {
+          for (let f of Array.from($$('.file-info .gist-blob-name'))) {
+            if (extMap[f.textContent.trim().split('.').pop()]) return true
+          }
+          return false
+        },
+        injectRunButton: () => {
+          for (let fh of Array.from($$('.file'))) {
+            const _filename = $('.gist-blob-name', fh).textContent.trim()
+            const _lang = extMap[_filename.split('.').pop()]
+            if (!_lang) continue // nothing to do if lang not supported
+            $('.file-actions', fh).insertAdjacentHTML('afterbegin', `<a class="btn btn-sm btn-purple runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}">Run</a>`)
+          }
+        },
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.file'),
+        getCode: () => $("textarea[name='gist[content]']", codeContainer).value
+      },
+      edit: {
+        pageHasSupportedLang: () => {
+          for (let f of Array.from($$('.gist-filename-input .filename'))) {
+            if (extMap[f.value.split('.').pop()]) return true
+          }
+          return false
+        },
+        injectRunButton: () => {
+          for (let fh of Array.from($$('.file'))) {
+            const _filename = $('.gist-filename-input .filename', fh).value
+            const _lang = extMap[_filename.split('.').pop()]
+            if (!_lang) continue // nothing to do if lang not supported
+            $('.file-actions', fh).insertAdjacentHTML('afterbegin', `<a class="btn btn-sm btn-purple runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}">Run</a>`)
+          }
+        },
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.file'),
+        getCode: () => $('.file-editor-textarea', codeContainer).value
+      }
+    }
+  },
+  bitbucket_snippets: {
+    getPage: () => {
+      if ($('#view-snippet')) {
+        return 'show'
+      } else if ($('.snippet-form .snippets-file-editors')) {
+        return 'edit'
+      }
+    },
+    pages: {
+      show: {
+        pageHasSupportedLang: () => {
+          for (let f of Array.from($$('#repo-content .bb-content-container-header-primary'))) {
+            if (extMap[f.textContent.trim().split('.').pop()]) return true
+          }
+          return false
+        },
+        injectRunButton: () => {
+          for (let fh of Array.from($$('#repo-content .bb-content-container.bb-row'))) {
+            const _filename = $('.bb-content-container-header-primary', fh).textContent.trim()
+            const _lang = extMap[_filename.split('.').pop()]
+            if (!_lang) continue // nothing to do if lang not supported
+            $('.bb-content-container-header-secondary', fh).insertAdjacentHTML('afterbegin', `<div class="aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${_filename}" data-lang="${_lang}">Run</button></div>`)
+          }
+        },
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.bb-content-container.bb-row'),
+        getCode: () => $('.code', codeContainer).textContent
+      },
+      edit: {
+        pageHasSupportedLang: () => {
+          for (let f of Array.from($$('.snippets-code-editor .code-editor-path-view-input'))) {
+            if (extMap[f.value.split('.').pop()]) return true
+          }
+          return false
+        },
+        injectRunButton: () => {
+          for (let fh of Array.from($$('.snippets-code-editor'))) {
+            const _filename = $('.code-editor-path-view-input', fh).value
+            const _lang = extMap[_filename.split('.').pop()]
+            if (!_lang) continue // nothing to do if lang not supported
+            $('.bb-content-container-header-primary', fh).insertAdjacentHTML('beforeend', `<div class="bb-content-container-item aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${_filename}" data-lang="${_lang}">Run</button></div>`)
+          }
+        },
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.snippets-code-editor'),
+        getCode: () => getCodeFromLines($$('pre.CodeMirror-line>span', codeContainer))
       }
     }
   }
 }
 
 const platform = getPlatform()
-let lang, page, runner, runnerCloseBtn, runBtn, runInput, runOutput
-let runnerVisible = false
+let filename, lang, page, runner, runnerCloseBtn, runBtn, runInput, runOutput
 
 const initRunner = () => {
-  if ($('#runmycode-popup-runner')) return // Run button is already added
-  platformMap[platform].injectRunButton()
+  if ($('.runmycode-popup-runner')) return // Run button is already added
+  platformMap[platform]['pages'][page].injectRunButton()
 
   const runnerWidth = 350
   const runnerMarkup = `<style>
@@ -131,7 +291,7 @@ const initRunner = () => {
   }
   </style>
 
-  <div id="runmycode-runner">
+  <div id="runmycode-runner" class="hidden">
     <div class="panel panel-default">
       <div id="runmycode-runner-handle" class="panel-heading">
         <button id="runmycode-close-runner" type="button" class="close">x</button>
@@ -177,14 +337,20 @@ const initRunner = () => {
   runInput = $('#runmycode-run-input')
   runOutput = $('#runmycode-run-output')
 
-  $('#runmycode-popup-runner').addEventListener('click', (e) => {
-    e.preventDefault()
-    if (runnerVisible) {
-      runnerCloseBtn.click()
-    } else {
-      runnerVisible = true
-      runner.style.display = 'block'
-    }
+  Array.from($$('.runmycode-popup-runner')).forEach((el) => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault()
+      runner.classList.remove('hidden')
+      const openRunnerBtn = e.target
+      codeContainer = platformMap[platform]['pages'][page].getCodeContainer(openRunnerBtn)
+      lang = openRunnerBtn.dataset.lang
+      filename = openRunnerBtn.dataset.filename
+      runInput.value = ''
+      runOutput.value = ''
+      runBtn.setAttribute('title', `Click to run ${filename}`)
+      runOutput.setAttribute('title', `Output from ${filename}`)
+      runOutput.setAttribute('placeholder', `Output from ${filename}`)
+    })
   })
   // injected Run btn and added click listener, no more work to do if justRunBtnToBeInjected
   if (justRunBtnToBeInjected) return
@@ -192,14 +358,10 @@ const initRunner = () => {
   let runnerOffset = { x: 0, y: 0 }
   runner.style.left = `${(window.innerWidth - runnerWidth) / 2}px` // have popup in the center of the screen
 
-  runnerCloseBtn.addEventListener('click', () => {
-    runner.style.display = 'none'
-    runnerVisible = false
-  })
+  runnerCloseBtn.addEventListener('click', () => runner.classList.add('hidden'))
   window.addEventListener('keydown', (e) => {
-    if (e.keyCode === 27) { // if ESC key pressed
-      runnerCloseBtn.click()
-    }
+    // if ESC key pressed
+    if (e.keyCode === 27) runnerCloseBtn.click()
   })
 
   const popupMove = (e) => {
@@ -226,6 +388,19 @@ const initRunner = () => {
     })
   })
 
+  const setRunning = () => {
+    runBtn.textContent = 'Running'
+    runBtn.disabled = true // disable run button
+    runOutput.classList.remove('error')
+    runOutput.value = `Running ${filename}`
+    $('#output-panel').classList.add('in')
+  }
+
+  const resetRunning = () => {
+    runBtn.textContent = 'Run'
+    runBtn.disabled = false // enable run button
+  }
+
   const callApi = (url, apiKey) => {
     fetch(url, {
       method: 'post',
@@ -246,22 +421,18 @@ const initRunner = () => {
       } else {
         runOutput.value = 'Some error happened. Please try again later.' // what else do I know? :/
       }
-      runBtn.disabled = false // enable run button
+      resetRunning()
     })
     .catch((error) => {
       console.error('Error:', error)
       runOutput.classList.add('error')
       runOutput.value = 'Some error happened. Please try again later.' // what else do I know? :/
-      runBtn.disabled = false // enable run button
+      resetRunning()
     })
   }
 
   runBtn.addEventListener('click', (e) => {
-    runBtn.disabled = true // disable run button
-    runOutput.classList.remove('error')
-    runOutput.value = `Running ${lang} code...`
-    $('#output-panel').classList.add('in')
-
+    setRunning()
     const getApiUrl = browser.storage.local.get('apiUrl')
     const getApiKey = browser.storage.local.get('apiKey')
     Promise.all([getApiUrl, getApiKey]).then((result) => {
@@ -278,7 +449,7 @@ const initRunner = () => {
       } else if (!key) {
         runOutput.classList.add('error')
         runOutput.value = 'Please set the API key in the extension options as generated at https://runmycode.online'
-        runBtn.disabled = false
+        resetRunning()
       }
       if (apiUrl && key) {
         const url = `${apiUrl}/${lang}?args=${encodeURIComponent(runInput.value)}`
@@ -288,11 +459,12 @@ const initRunner = () => {
       console.error('getCreds Error:', error)
       runOutput.classList.add('error')
       runOutput.value = 'Some error happened. Please try again later.' // what else do I know? :/
+      resetRunning()
     })
   })
 }
 
-const cleanUpRunner = () => {
+const clearRunner = () => {
   if (runner) {
     runInput.value = ''
     runOutput.value = ''
@@ -304,10 +476,9 @@ const handlePageUpdate = () => {
   // console.log('platform:', platform)
   if (platformMap[platform]) {
     page = platformMap[platform].getPage()
-    lang = platformMap[platform].getLang()
-    // console.log('page:', page, ' lang:', lang)
-    cleanUpRunner()
-    if (lang && page) initRunner()
+    // console.log('page:', page)
+    clearRunner()
+    if (page && platformMap[platform]['pages'][page].pageHasSupportedLang()) initRunner()
   }
 }
 
