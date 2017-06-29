@@ -107,10 +107,14 @@ const platformMap = {
         pageHasSupportedLang: () => $('body>div.example') !== null,
         injectRunButton: () => {
           const openRunnerBtn = $('.run')
-          openRunnerBtn.parentNode.setAttribute('href', '#')
+          openRunnerBtn.title = 'Run this code here with RunMyCode Online'
           openRunnerBtn.classList.add('runmycode-popup-runner')
           openRunnerBtn.dataset.filename = $('body>div.example').id + '.go'
           openRunnerBtn.dataset.lang = 'go'
+          const origAnchor = openRunnerBtn.parentNode
+          const goPlayLink = `<a style="float: right; line-height: 1; margin-left: 10px;" title="Run this code in Go Playground" href="${origAnchor.href}">#<a/>`
+          origAnchor.parentNode.insertAdjacentHTML('afterbegin', goPlayLink)
+          origAnchor.href = '#'
         },
         // there are 2 tables on the page, first one has the code
         getCodeContainer: openRunnerBtn => openRunnerBtn.closest('table'),
