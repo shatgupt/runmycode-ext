@@ -43,18 +43,23 @@ const platformMap = {
         return 'edit'
       }
     },
-    pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
     injectRunButton: () => {
       // file-actions on show page, file-buttons on edit
       const fileActions = $('.file-actions') || $('.file-buttons')
-      fileActions.insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm runmycode-popup-runner" data-filename="${getFilenameFromPath()}" data-lang="${getLangFromPathExt()}">Run</a></div>`)
+      fileActions.insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm btn-warning runmycode-popup-runner" data-filename="${getFilenameFromPath()}" data-lang="${getLangFromPathExt()}">Run</a></div>`)
     },
     pages: {
       show: {
-        getCode: () => getCodeFromLines($('.blob-content code').children)
+        pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
+        injectRunButton: () => platformMap.gitlab.injectRunButton(),
+        getCodeContainer: () => body,
+        getCode: () => getCodeFromLines($('.blob-content code', codeContainer).children)
       },
       edit: {
-        getCode: () => getCodeFromLines($$('.ace_line'))
+        pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
+        injectRunButton: () => platformMap.gitlab.injectRunButton(),
+        getCodeContainer: () => body,
+        getCode: () => getCodeFromLines($$('.ace_line', codeContainer))
       }
     }
   },
@@ -69,16 +74,21 @@ const platformMap = {
         return 'show'
       }
     },
-    pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
     injectRunButton: () => {
-      $('.file-actions').insertAdjacentHTML('afterbegin', `<div class="BtnGroup"><a class="btn btn-sm BtnGroup-item runmycode-popup-runner" data-filename="${getFilenameFromPath()}" data-lang="${getLangFromPathExt()}">Run</a></div>`)
+      $('.file-actions').insertAdjacentHTML('afterbegin', `<div class="BtnGroup"><a class="btn btn-sm BtnGroup-item btn-purple runmycode-popup-runner" data-filename="${getFilenameFromPath()}" data-lang="${getLangFromPathExt()}">Run</a></div>`)
     },
     pages: {
       show: {
-        getCode: () => getCodeFromLines($$('.blob-wrapper table td.blob-code'))
+        pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
+        injectRunButton: () => platformMap.github.injectRunButton(),
+        getCodeContainer: () => body,
+        getCode: () => getCodeFromLines($$('.blob-wrapper table td.blob-code', codeContainer))
       },
       edit: {
-        getCode: () => $('.file-editor-textarea').value
+        pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
+        injectRunButton: () => platformMap.github.injectRunButton(),
+        getCodeContainer: () => body,
+        getCode: () => $('.file-editor-textarea', codeContainer).value
       }
     }
   },
@@ -86,18 +96,19 @@ const platformMap = {
     getPage: () => {
       if ($('body>div.example')) return 'show'
     },
-    pageHasSupportedLang: () => $('body>div.example') !== null,
-    injectRunButton: () => {
-      const openRunnerBtn = $('.run')
-      openRunnerBtn.parentNode.setAttribute('href', '#')
-      openRunnerBtn.classList.add('runmycode-popup-runner')
-      openRunnerBtn.dataset.filename = $('body>div.example').id + '.go'
-      openRunnerBtn.dataset.lang = 'go'
-    },
     pages: {
       show: {
+        pageHasSupportedLang: () => $('body>div.example') !== null,
+        injectRunButton: () => {
+          const openRunnerBtn = $('.run')
+          openRunnerBtn.parentNode.setAttribute('href', '#')
+          openRunnerBtn.classList.add('runmycode-popup-runner')
+          openRunnerBtn.dataset.filename = $('body>div.example').id + '.go'
+          openRunnerBtn.dataset.lang = 'go'
+        },
         // there are 2 tables on the page, first one has the code
-        getCode: () => getCodeFromLines($('table').querySelectorAll('.code>.highlight>pre'))
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('table'),
+        getCode: () => getCodeFromLines($('.code>.highlight>pre', codeContainer))
       }
     }
   },
@@ -105,13 +116,14 @@ const platformMap = {
     getPage: () => {
       if ($('#editor-container>#source-view')) return 'show'
     },
-    pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
-    injectRunButton: () => {
-      $('.file-source-container>.toolbar>.secondary').insertAdjacentHTML('afterbegin', `<div class="aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${getFilenameFromPath()}" data-lang="${getLangFromPathExt()}">Run</button></div>`)
-    },
     pages: {
       show: {
-        getCode: () => $('.code').textContent
+        pageHasSupportedLang: () => getLangFromPathExt() !== undefined,
+        injectRunButton: () => {
+          $('.file-source-container>.toolbar>.secondary').insertAdjacentHTML('afterbegin', `<div class="aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${getFilenameFromPath()}" data-lang="${getLangFromPathExt()}">Run</button></div>`)
+        },
+        getCodeContainer: () => body,
+        getCode: () => $('.code', codeContainer).textContent
       }
     }
   },
@@ -123,23 +135,40 @@ const platformMap = {
         return 'edit'
       }
     },
-    pageHasSupportedLang: () => {
-      for (let f of Array.from($$('.file-holder .file-title-name'))) {
-        if (extMap[f.textContent.trim().split('.').pop()]) return true
-      }
-      return false
-    },
-    injectRunButton: () => {
-      for (let fh of Array.from($$('.file-holder'))) {
-        const _filename = $('.file-title-name', fh).textContent.trim()
-        const _lang = extMap[_filename.split('.').pop()]
-        if (!_lang) continue // nothing to do if lang not supported
-        $('.file-actions', fh).insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}">Run</a></div>`)
-      }
-    },
     pages: {
       show: {
-        getCode: () => getCodeFromLines($('.blob-content code').children)
+        pageHasSupportedLang: () => {
+          for (let f of Array.from($$('.file-holder .file-title-name'))) {
+            if (extMap[f.textContent.trim().split('.').pop()]) return true
+          }
+          return false
+        },
+        injectRunButton: () => {
+          for (let fh of Array.from($$('.file-holder'))) {
+            const _filename = $('.file-title-name', fh).textContent.trim()
+            const _lang = extMap[_filename.split('.').pop()]
+            if (!_lang) continue // nothing to do if lang not supported
+            $('.file-actions', fh).insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm btn-warning runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}">Run</a></div>`)
+          }
+        },
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.file-holder'),
+        getCode: () => getCodeFromLines($('.blob-content code', codeContainer).children)
+      },
+      edit: {
+        pageHasSupportedLang: () => {
+          for (let f of Array.from($$('.file-holder .snippet-file-name'))) {
+            if (extMap[f.value.split('.').pop()]) return true
+          }
+          return false
+        },
+        injectRunButton: () => {
+          // only one file in gitlab snippets for now
+          const _filename = $('.file-holder .snippet-file-name').value
+          const _lang = extMap[_filename.split('.').pop()]
+          $('.snippet-form .form-actions').insertAdjacentHTML('afterbegin', `<input type="button" class="btn btn-warning runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}" value="Run">`)
+        },
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.form-actions').previousElementSibling,
+        getCode: () => getCodeFromLines($$('.ace_line', codeContainer))
       }
     }
   },
@@ -154,27 +183,42 @@ const platformMap = {
         return 'show'
       }
     },
-    pageHasSupportedLang: () => {
-      for (let f of Array.from($$('.file-info .gist-blob-name'))) {
-        if (extMap[f.textContent.trim().split('.').pop()]) return true
-      }
-      return false
-    },
-    injectRunButton: () => {
-      for (let fh of Array.from($$('.file'))) {
-        const _filename = $('.gist-blob-name', fh).textContent.trim()
-        const _lang = extMap[_filename.split('.').pop()]
-        if (!_lang) continue // nothing to do if lang not supported
-        $('.file-actions', fh).insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}">Run</a></div>`)
-      }
-    },
     pages: {
       show: {
+        pageHasSupportedLang: () => {
+          for (let f of Array.from($$('.file-info .gist-blob-name'))) {
+            if (extMap[f.textContent.trim().split('.').pop()]) return true
+          }
+          return false
+        },
+        injectRunButton: () => {
+          for (let fh of Array.from($$('.file'))) {
+            const _filename = $('.gist-blob-name', fh).textContent.trim()
+            const _lang = extMap[_filename.split('.').pop()]
+            if (!_lang) continue // nothing to do if lang not supported
+            $('.file-actions', fh).insertAdjacentHTML('afterbegin', `<a class="btn btn-sm btn-purple runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}">Run</a>`)
+          }
+        },
         getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.file'),
         getCode: () => $("textarea[name='gist[content]']", codeContainer).value
       },
       edit: {
-        getCode: () => $('.file-editor-textarea').value
+        pageHasSupportedLang: () => {
+          for (let f of Array.from($$('.gist-filename-input .filename'))) {
+            if (extMap[f.value.split('.').pop()]) return true
+          }
+          return false
+        },
+        injectRunButton: () => {
+          for (let fh of Array.from($$('.file'))) {
+            const _filename = $('.gist-filename-input .filename', fh).value
+            const _lang = extMap[_filename.split('.').pop()]
+            if (!_lang) continue // nothing to do if lang not supported
+            $('.file-actions', fh).insertAdjacentHTML('afterbegin', `<a class="btn btn-sm btn-purple runmycode-popup-runner" data-filename="${_filename}" data-lang="${_lang}">Run</a>`)
+          }
+        },
+        getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.file'),
+        getCode: () => $('.file-editor-textarea', codeContainer).value
       }
     }
   }
@@ -185,7 +229,7 @@ let filename, lang, page, runner, runnerCloseBtn, runBtn, runInput, runOutput
 
 const initRunner = () => {
   if ($('.runmycode-popup-runner')) return // Run button is already added
-  platformMap[platform].injectRunButton()
+  platformMap[platform]['pages'][page].injectRunButton()
 
   const runnerWidth = 350
   const runnerMarkup = `<style>
@@ -379,9 +423,9 @@ const handlePageUpdate = () => {
   console.log('platform:', platform)
   if (platformMap[platform]) {
     page = platformMap[platform].getPage()
-    console.log('page:', page, ' lang:', lang)
+    console.log('page:', page)
     clearRunner()
-    if (page && platformMap[platform].pageHasSupportedLang()) initRunner()
+    if (page && platformMap[platform]['pages'][page].pageHasSupportedLang()) initRunner()
   }
 }
 
