@@ -210,7 +210,7 @@ const platformMap = {
           }
         },
         getCodeContainer: openRunnerBtn => openRunnerBtn.closest('.file'),
-        getCode: () => $("textarea[name='gist[content]']", codeContainer).value
+        getCode: () => getCodeFromLines($$('.blob-wrapper table td.blob-code', codeContainer))
       },
       edit: {
         pageHasSupportedLang: () => {
