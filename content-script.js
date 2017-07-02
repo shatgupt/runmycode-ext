@@ -456,7 +456,7 @@ const initRunner = () => {
         resetRunning()
       }
       if (apiUrl && key) {
-        const url = `${apiUrl}/${lang}?args=${encodeURIComponent(runInput.value)}`
+        const url = `${apiUrl}/${lang}?platform=${platform}&args=${encodeURIComponent(runInput.value)}`
         callApi(url, key)
       }
     }, (error) => {
