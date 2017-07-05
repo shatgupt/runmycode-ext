@@ -283,6 +283,7 @@ const platformMap = {
 
 const platform = getPlatform()
 let filename, lang, page, runner, runnerCloseBtn, runBtn, runInput, runOutput
+let codeRunning = false
 
 const initRunner = () => {
   if ($('.runmycode-popup-runner')) return // Run button is already added
@@ -344,6 +345,11 @@ const initRunner = () => {
   Array.from($$('.runmycode-popup-runner')).forEach((el) => {
     el.addEventListener('click', (e) => {
       e.preventDefault()
+      if (codeRunning) {
+        window.alert(`Already running ${filename}. Wait till it completes.`)
+        // runOutput.value = `Already running ${filename}. Wait till it completes.`
+        return
+      }
       runner.classList.remove('hidden')
       const openRunnerBtn = e.target
       codeContainer = platformMap[platform]['pages'][page].getCodeContainer(openRunnerBtn)
@@ -393,6 +399,7 @@ const initRunner = () => {
   })
 
   const setRunning = () => {
+    codeRunning = true
     runBtn.textContent = 'Running'
     runBtn.disabled = true // disable run button
     runOutput.classList.remove('error')
@@ -401,6 +408,7 @@ const initRunner = () => {
   }
 
   const resetRunning = () => {
+    codeRunning = false
     runBtn.textContent = 'Run'
     runBtn.disabled = false // enable run button
   }
