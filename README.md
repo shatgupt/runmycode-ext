@@ -5,7 +5,7 @@
 [![RunMyCode Online Screenshot](screenshot.png?raw=true)](https://www.youtube.com/watch?v=iwz8n3v7QVY "RunMyCode Online Introduction video on YouTube")
 
 ## How to Use
-1. Install the extension: [Chrome](https://chrome.google.com/webstore/detail/runmycode-online/iidcnkpdmnopbbkdmneglbelcefgfohf), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/runmycode-online)
+1. Install the extension: [Chrome](https://chrome.google.com/webstore/detail/runmycode-online/iidcnkpdmnopbbkdmneglbelcefgfohf), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/runmycode-online), [Opera](#supported-browsers)
 2. On extension install, [RunMyCode Online](https://runmycode.online) will open in a new tab and prompt you to authenticate to get a key.
 3. On authenticating with any the of providers, you will be redirected to dashboard page and extension will be auto-configured with your key.
 4. Now you can go to any [supported language](#supported-languages) code page on Github or Gitlab and you will see a colored `Run` button added to left of usual action buttons (see screenshot above). For example, you can test the extension with [this Ruby code on Github](https://github.com/shatgupt/runmycode-test/blob/master/ruby.rb).
@@ -36,7 +36,7 @@ Language is detected based on the file extension. So for executing Python3 code,
 Latest versions of following browsers:
 1. [Chrome](https://chrome.google.com/webstore/detail/runmycode-online/iidcnkpdmnopbbkdmneglbelcefgfohf)
 2. [Firefox](https://addons.mozilla.org/en-US/firefox/addon/runmycode-online)
-3. Opera (Not published on store yet)
+3. Opera - Use [this Opera extension](https://addons.opera.com/en/extensions/details/download-chrome-extension-9/) to install the Chrome version.
 
 [Edge has a non-standard WebExtension implementation](https://github.com/mozilla/webextension-polyfill/issues/3)
 
