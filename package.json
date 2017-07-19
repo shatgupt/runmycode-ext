@@ -14,9 +14,8 @@
   "standard": {
     "globals": [
       "browser",
-      "fetch",
-      "localStorage",
-      "location"
+      "CustomEvent",
+      "MutationObserver"
     ]
   }
 }

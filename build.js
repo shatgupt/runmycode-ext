@@ -35,6 +35,7 @@ buildTargets.forEach((browser) => {
 
   const browserDistDir = `${distDir}/${browser}`
   fs.existsSync(browserDistDir) || fs.mkdirSync(browserDistDir)
+  fs.existsSync(`${browserDistDir}/platforms`) || fs.mkdirSync(`${browserDistDir}/platforms`)
   fs.writeFileSync(`${browserDistDir}/manifest.json`, JSON.stringify(manifest, null, 2))
 
   // copy required files

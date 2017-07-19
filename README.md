@@ -13,9 +13,10 @@
 6. You can also edit the code using the web editor on Github or Gitlab and make it run through the same `Run` button as above.
 
 ## Supported Websites
+All the supported version control sites have support for running standalone code from view, edit and new file pages.
 1. [Github](https://github.com/shatgupt/runmycode-test/blob/master/ruby.rb)
 2. [Gitlab](https://gitlab.com/shatgupt/runmycode-test/blob/master/ruby.rb)
-3. [BitBucket](https://bitbucket.org/shatgupt/runmycode-test/src/c9cda15cb3fa1144e53f199e6ac6003ee5bdb25b/ruby.rb) - Editor not supported yet
+3. [BitBucket](https://bitbucket.org/shatgupt/runmycode-test/src/c9cda15cb3fa1144e53f199e6ac6003ee5bdb25b/ruby.rb)
 4. [Go by Example](https://gobyexample.com/hello-world)
 5. [Github Gist](https://gist.github.com/shatgupt/b76ebbf67c6a38d0decb686ff230dd04)
 6. [Gitlab Snippets](https://gitlab.com/snippets/1664532)
