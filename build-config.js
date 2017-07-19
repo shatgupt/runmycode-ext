@@ -8,19 +8,51 @@ const config = {
       'description': 'Run code online from sites like Github, Gitlab and more',
       'author': 'Shatrughn Gupta',
       'homepage_url': 'https://runmycode.online',
-      'version': '1.4.4',
+      'version': '1.5.0',
       'icons': { '128': 'icon128.png' },
       'manifest_version': 2,
       'content_scripts': [
         {
-          'matches': [
-            'https://github.com/*',
-            'https://gist.github.com/*',
-            'https://gitlab.com/*',
-            'https://bitbucket.org/*',
-            'https://gobyexample.com/*'
+          'matches': ['https://github.com/*', 'https://gist.github.com/*'],
+          'js': [
+            'browser-polyfill.min.js',
+            'common-utils.js',
+            'platforms/github.js',
+            'runmycode.js'
           ],
-          'js': ['browser-polyfill.min.js', 'content-script.js'],
+          'css': ['runmycode-panel.css'],
+          'run-at': 'document_idle'
+        },
+        {
+          'matches': ['https://gitlab.com/*'],
+          'js': [
+            'browser-polyfill.min.js',
+            'common-utils.js',
+            'platforms/gitlab.js',
+            'runmycode.js'
+          ],
+          'css': ['runmycode-panel.css'],
+          'run-at': 'document_idle'
+        },
+        {
+          'matches': ['https://bitbucket.org/*'],
+          'js': [
+            'browser-polyfill.min.js',
+            'common-utils.js',
+            'platforms/bitbucket.js',
+            'runmycode.js'
+          ],
+          'css': ['runmycode-panel.css'],
+          'run-at': 'document_idle'
+        },
+        {
+          'matches': ['https://gobyexample.com/*'],
+          'js': [
+            'browser-polyfill.min.js',
+            'common-utils.js',
+            'platforms/gobyexample.js',
+            'runmycode.js'
+          ],
           'css': ['runmycode-panel.css'],
           'run-at': 'document_idle'
         },
@@ -48,12 +80,17 @@ const config = {
     'common': [
       'browser-polyfill.min.js',
       'background.js',
-      'content-script.js',
+      'runmycode.js',
       'options.html',
       'options.js',
+      'common-utils.js',
       'runmycode-panel.css',
       'icon128.png',
-      'auto-configure.js'
+      'auto-configure.js',
+      'platforms/github.js',
+      'platforms/gitlab.js',
+      'platforms/bitbucket.js',
+      'platforms/gobyexample.js'
     ]
   }
 }
