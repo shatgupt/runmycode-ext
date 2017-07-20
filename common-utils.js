@@ -52,13 +52,22 @@
   }
   const getLangFromFileName = (filename) => extMap[getExtFromFileName(filename)]
 
-  // CodeMirror adds this invisible character if empty lines
-  const invisibleSpaceUsedByCodeMirror = (() => {
+  // CodeMirror on Bitbucket adds these weird characters
+  let emptyLineUsedByCodeMirror, nbspUsedByCodeMirror
+  (() => {
     const el = document.createElement('div')
     el.innerHTML = '&#8203;'
-    return el.textContent
+    emptyLineUsedByCodeMirror = el.textContent
+    el.innerHTML = '&nbsp;'
+    nbspUsedByCodeMirror = el.textContent
   })()
-  const getCodeFromLines = (lines) => [].map.call(lines, (line) => line.innerText.replace(invisibleSpaceUsedByCodeMirror, '\n') === '\n' ? '' : line.innerText).join('\n')
+  const getCodeFromLines = (lines) => {
+    return [].map.call(lines, (line) => {
+      // replace weird characters
+      const lineText = line.innerText.replace(emptyLineUsedByCodeMirror, '\n').split(nbspUsedByCodeMirror).join(' ')
+      return lineText === '\n' ? '' : lineText
+    }).join('\n')
+  }
 
   // export
   rmc.$ = $
