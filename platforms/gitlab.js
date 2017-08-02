@@ -12,6 +12,7 @@
   const gitlab = rmc.platforms.gitlab
 
   const gitlabInjectRunButton = (btnContainer, fileName) => {
+    if ($('.runmycode-popup-runner', btnContainer)) return
     btnContainer.insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm btn-warning runmycode-popup-runner" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</a></div>`)
   }
 
@@ -74,6 +75,7 @@
     fileNameSelector: '.file-title-name',
     runButtonContainer: '.file-actions',
     injectRunButton: (btnContainer, fileName) => {
+      if ($('.runmycode-popup-runner', btnContainer)) return
       btnContainer.insertAdjacentHTML('afterbegin', `<div class="btn-group"><a class="btn btn-sm btn-warning runmycode-popup-runner" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</a></div>`)
     },
     getCode: (codeContainer) => getCodeFromLines($('.blob-content code', codeContainer).children)
@@ -83,6 +85,7 @@
     fileNameSelector: '.snippet-file-name',
     runButtonContainer: '.js-file-title.file-title',
     injectRunButton: (btnContainer, fileName) => {
+      if ($('.runmycode-popup-runner', btnContainer)) return
       // only one file in Gitlab snippets for now
       const fileNameInput = $('.snippet-file-name', btnContainer)
       // shorten input box to accommodate open runner button

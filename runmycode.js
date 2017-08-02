@@ -299,7 +299,7 @@
     // console.log('platform:', platform)
     if (platforms[platform]) {
       const page = platforms[platform].getPage()
-      console.log('page:', page)
+      // console.log('page:', page)
       clearRunner()
       if (page) {
         pageConf = platforms[platform]['pages'][page]

@@ -19,6 +19,7 @@
     containerSelector: 'table', // table closest to Run btn
     hasSupportedLang: () => true, // always true for show page
     injectRunButtons: () => {
+      if ($('.runmycode-popup-runner')) return
       const openRunnerBtn = $('.run')
       openRunnerBtn.title = 'Run this code here with RunMyCode Online'
       openRunnerBtn.classList.add('runmycode-popup-runner')

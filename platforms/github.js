@@ -12,6 +12,7 @@
   const github = rmc.platforms.github
 
   const githubInjectRunButton = (btnContainer, fileName) => {
+    if ($('.runmycode-popup-runner', btnContainer)) return
     btnContainer.insertAdjacentHTML('afterbegin', `<div class="BtnGroup"><a class="btn btn-sm BtnGroup-item btn-purple runmycode-popup-runner" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</a></div>`)
   }
 
@@ -52,6 +53,7 @@
   const githubGist = rmc.platforms.github_gist
 
   const gistInjectRunButton = (btnContainer, fileName) => {
+    if ($('.runmycode-popup-runner', btnContainer)) return
     btnContainer.insertAdjacentHTML('afterbegin', `<a class="btn btn-sm btn-purple runmycode-popup-runner" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</a>`)
   }
 
