@@ -4,6 +4,7 @@
   const rmc = window.runmycode
   const $ = rmc.$
   const $$ = rmc.$$
+  const htmlFromString = rmc.htmlFromString
   const getLangFromFileName = rmc.getLangFromFileName
   const getCodeFromLines = rmc.getCodeFromLines
 
@@ -12,7 +13,7 @@
 
   const bitbucketInjectRunButton = (btnContainer, fileName) => {
     if ($('.runmycode-popup-runner', btnContainer)) return
-    btnContainer.insertAdjacentHTML('afterbegin', `<div class="aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</button></div>`)
+    btnContainer.insertBefore(htmlFromString(`<div class="aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</button></div>`), btnContainer.firstChild)
   }
 
   const bitbucketRemoveRunButton = (openRunnerBtn) => {
@@ -91,7 +92,7 @@
     runButtonContainer: '.bb-content-container-header-primary',
     injectRunButton: (btnContainer, fileName) => {
       if ($('.runmycode-popup-runner', btnContainer)) return
-      btnContainer.insertAdjacentHTML('beforeend', `<div class="bb-content-container-item aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</button></div>`)
+      btnContainer.appendChild(htmlFromString(`<div class="bb-content-container-item aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</button></div>`))
     },
     removeRunButton: bitbucketRemoveRunButton,
     addFileWatcher: true,

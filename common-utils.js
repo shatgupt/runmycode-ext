@@ -38,6 +38,8 @@
 
   const $ = (s, elem = document) => elem.querySelector(s)
   const $$ = (s, elem = document) => elem.querySelectorAll(s)
+  // https://stackoverflow.com/a/25214113
+  const htmlFromString = htmlStr => document.createRange().createContextualFragment(htmlStr)
 
   const getPlatform = () => {
     const l = window.location.hostname + '/' + window.location.pathname.split('/')[1]
@@ -72,6 +74,7 @@
   // export
   rmc.$ = $
   rmc.$$ = $$
+  rmc.htmlFromString = htmlFromString
   rmc.displayLangMap = displayLangMap
   rmc.getPlatform = getPlatform
   rmc.getFileNameFromElement = getFileNameFromElement

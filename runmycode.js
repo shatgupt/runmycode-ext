@@ -4,6 +4,7 @@
   const rmc = window.runmycode
   const $ = rmc.$
   const $$ = rmc.$$
+  const htmlFromString = rmc.htmlFromString
   const displayLangMap = rmc.displayLangMap
   const getFileNameFromElement = rmc.getFileNameFromElement
   const getLangFromFileName = rmc.getLangFromFileName
@@ -117,7 +118,7 @@
     if ($('#runmycode-runner')) return // runner is already present
 
     const runnerWidth = 350
-    const runnerMarkup = `<style>
+    const runnerHTML = htmlFromString(`<style>
     #runmycode-runner {
       width: ${runnerWidth}px;
     }
@@ -155,10 +156,9 @@
           </div>
         </div>
       </div>
-    </div>
-    `
+    </div>`)
     // inject runner styles and markup
-    body.insertAdjacentHTML('afterbegin', runnerMarkup)
+    body.appendChild(runnerHTML)
 
     /* *** Start Movable popup https://gist.github.com/akirattii/9165836 ****/
     runner = $('#runmycode-runner')
