@@ -4,7 +4,7 @@
   const rmc = window.runmycode
   const $ = rmc.$
   const $$ = rmc.$$
-  const htmlFromString = rmc.htmlFromString
+  const buildDomElement = rmc.buildDomElement
   const getLangFromFileName = rmc.getLangFromFileName
   const getCodeFromLines = rmc.getCodeFromLines
 
@@ -13,7 +13,16 @@
 
   const bitbucketInjectRunButton = (btnContainer, fileName) => {
     if ($('.runmycode-popup-runner', btnContainer)) return
-    btnContainer.insertBefore(htmlFromString(`<div class="aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</button></div>`), btnContainer.firstChild)
+    btnContainer.insertBefore(
+      buildDomElement(
+        ['div', {'class': 'aui-buttons'},
+          ['button', {'class': 'aui-button aui-button-primary runmycode-popup-runner', 'style': 'font-weight: normal;', 'data-filename': fileName, 'data-lang': getLangFromFileName(fileName)},
+            'Run'
+          ]
+        ]
+      ),
+      btnContainer.firstChild
+    )
   }
 
   const bitbucketRemoveRunButton = (openRunnerBtn) => {
@@ -92,7 +101,13 @@
     runButtonContainer: '.bb-content-container-header-primary',
     injectRunButton: (btnContainer, fileName) => {
       if ($('.runmycode-popup-runner', btnContainer)) return
-      btnContainer.appendChild(htmlFromString(`<div class="bb-content-container-item aui-buttons"><button class="aui-button aui-button-primary runmycode-popup-runner" style="font-weight: normal;" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</button></div>`))
+      btnContainer.appendChild(buildDomElement(
+        ['div', {'class': 'bb-content-container-item aui-buttons'},
+          ['button', {'class': 'aui-button aui-button-primary runmycode-popup-runner', 'style': 'font-weight: normal;', 'data-filename': fileName, 'data-lang': getLangFromFileName(fileName)},
+            'Run'
+          ]
+        ])
+      )
     },
     removeRunButton: bitbucketRemoveRunButton,
     addFileWatcher: true,
