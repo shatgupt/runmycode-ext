@@ -4,7 +4,7 @@
   const rmc = window.runmycode
   const $ = rmc.$
   const $$ = rmc.$$
-  const htmlFromString = rmc.htmlFromString
+  const buildDomElement = rmc.buildDomElement
   const getLangFromFileName = rmc.getLangFromFileName
   const getCodeFromLines = rmc.getCodeFromLines
   const body = document.body
@@ -14,7 +14,16 @@
 
   const githubInjectRunButton = (btnContainer, fileName) => {
     if ($('.runmycode-popup-runner', btnContainer)) return
-    btnContainer.insertBefore(htmlFromString(`<div class="BtnGroup"><a class="btn btn-sm BtnGroup-item btn-purple runmycode-popup-runner" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</a></div>`), btnContainer.firstChild)
+    btnContainer.insertBefore(
+      buildDomElement(
+        ['div', {'class': 'BtnGroup'},
+          ['a', {'class': 'btn btn-sm BtnGroup-item btn-purple runmycode-popup-runner', 'data-filename': fileName, 'data-lang': getLangFromFileName(fileName)},
+            'Run'
+          ]
+        ]
+      ),
+      btnContainer.firstChild
+    )
   }
 
   const githubRemoveRunButton = (openRunnerBtn) => {
@@ -55,7 +64,14 @@
 
   const gistInjectRunButton = (btnContainer, fileName) => {
     if ($('.runmycode-popup-runner', btnContainer)) return
-    btnContainer.insertBefore(htmlFromString(`<a class="btn btn-sm btn-purple runmycode-popup-runner" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</a>`), btnContainer.firstChild)
+    btnContainer.insertBefore(
+      buildDomElement(
+        ['a', {'class': 'btn btn-sm btn-purple runmycode-popup-runner', 'data-filename': fileName, 'data-lang': getLangFromFileName(fileName)},
+          'Run'
+        ]
+      ),
+      btnContainer.firstChild
+    )
   }
 
   const gistRemoveRunButton = (openRunnerBtn) => {

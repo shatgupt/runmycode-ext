@@ -4,7 +4,7 @@
   const rmc = window.runmycode
   const $ = rmc.$
   const $$ = rmc.$$
-  const htmlFromString = rmc.htmlFromString
+  const buildDomElement = rmc.buildDomElement
   const getLangFromFileName = rmc.getLangFromFileName
   const getCodeFromLines = rmc.getCodeFromLines
   const body = document.body
@@ -14,7 +14,16 @@
 
   const gitlabInjectRunButton = (btnContainer, fileName) => {
     if ($('.runmycode-popup-runner', btnContainer)) return
-    btnContainer.insertBefore(htmlFromString(`<div class="btn-group"><a class="btn btn-sm btn-warning runmycode-popup-runner" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</a></div>`), btnContainer.firstChild)
+    btnContainer.insertBefore(
+      buildDomElement(
+        ['div', {'class': 'btn-group'},
+          ['a', {'class': 'btn btn-warning runmycode-popup-runner', 'data-filename': fileName, 'data-lang': getLangFromFileName(fileName)},
+            'Run'
+          ]
+        ]
+      ),
+      btnContainer.firstChild
+    )
   }
 
   const gitlabRemoveRunButton = (openRunnerBtn) => {
@@ -75,10 +84,7 @@
     containerSelector: '.file-holder',
     fileNameSelector: '.file-title-name',
     runButtonContainer: '.file-actions',
-    injectRunButton: (btnContainer, fileName) => {
-      if ($('.runmycode-popup-runner', btnContainer)) return
-      btnContainer.insertBefore(htmlFromString(`<div class="btn-group"><a class="btn btn-sm btn-warning runmycode-popup-runner" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}">Run</a></div>`), btnContainer.firstChild)
-    },
+    injectRunButton: gitlabInjectRunButton,
     getCode: (codeContainer) => getCodeFromLines($('.blob-content code', codeContainer).children)
   }
   gitlabSnippets.pages.edit = {
@@ -91,7 +97,16 @@
       const fileNameInput = $('.snippet-file-name', btnContainer)
       // shorten input box to accommodate open runner button
       Object.assign(fileNameInput.style, {display: 'inline-block', width: '60%'})
-      btnContainer.appendChild(htmlFromString(`<input type="button" class="btn btn-warning runmycode-popup-runner" style="float: right; font-weight: bold;" data-filename="${fileName}" data-lang="${getLangFromFileName(fileName)}" value="Run">`))
+      btnContainer.appendChild(
+        buildDomElement(['input', {
+          'type': 'button',
+          'class': 'btn btn-warning runmycode-popup-runner',
+          'style': 'float: right; font-weight: bold;',
+          'value': 'Run',
+          'data-filename': fileName,
+          'data-lang': getLangFromFileName(fileName)
+        }])
+      )
     },
     removeRunButton: (openRunnerBtn) => { openRunnerBtn.outerHTML = '' },
     addFileWatcher: true,

@@ -4,7 +4,7 @@
   const rmc = window.runmycode
   const $ = rmc.$
   const $$ = rmc.$$
-  const htmlFromString = rmc.htmlFromString
+  const buildDomElement = rmc.buildDomElement
   const getCodeFromLines = rmc.getCodeFromLines
 
   rmc.platforms.gobyexample = {} // platform name should match whatever is defined in locationMap in common-utils.js
@@ -27,8 +27,14 @@
       openRunnerBtn.dataset.filename = $('body>div.example').id + '.go'
       openRunnerBtn.dataset.lang = 'go'
       const origAnchor = openRunnerBtn.parentNode
-      const goPlayLink = htmlFromString(`<a style="float: right; line-height: 1; margin-left: 10px;" title="Run this code in Go Playground" href="${origAnchor.href}">#</a>`)
-      origAnchor.parentNode.insertBefore(goPlayLink, origAnchor)
+      origAnchor.parentNode.insertBefore(
+        buildDomElement(
+          ['a', {'style': 'float: right; line-height: 1; margin-left: 10px;', 'title': 'Run this code in Go Playground', 'href': origAnchor.href},
+            '#'
+          ]
+        ),
+        origAnchor
+      )
       origAnchor.href = '#'
     },
     getCode: (codeContainer) => getCodeFromLines($$('.code>.highlight>pre', codeContainer))
