@@ -156,7 +156,7 @@
         </div>
       </div>
     </div>`
-    // inject runner styles and markup
+    // following insertAdjacentHTML should be safe since the above html string is fully static and has no variable/user provided component
     body.insertAdjacentHTML('afterbegin', runnerHTML)
 
     /* *** Start Movable popup https://gist.github.com/akirattii/9165836 ****/
