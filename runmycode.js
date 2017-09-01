@@ -117,7 +117,7 @@
     if ($('#runmycode-runner')) return // runner is already present
 
     const runnerWidth = 350
-    const runnerMarkup = `<style>
+    const runnerHTML = `<style>
     #runmycode-runner {
       width: 350px;
     }
@@ -157,7 +157,7 @@
       </div>
     </div>`
     // inject runner styles and markup
-    body.insertAdjacentHTML('afterbegin', runnerMarkup)
+    body.insertAdjacentHTML('afterbegin', runnerHTML)
 
     /* *** Start Movable popup https://gist.github.com/akirattii/9165836 ****/
     runner = $('#runmycode-runner')
