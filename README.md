@@ -1,6 +1,6 @@
 # RunMyCode Online WebExtension
 
-> Browser extension to run code online from sites like Github, Gitlab and more - [https://runmycode.online](https://runmycode.online)
+> Browser extension to run code online directly from Github, Gitlab, Bitbucket and more - [https://runmycode.online](https://runmycode.online)
 
 [![RunMyCode Online Screenshot](screenshot.png?raw=true)](https://www.youtube.com/watch?v=iwz8n3v7QVY "RunMyCode Online Introduction video on YouTube")
 
@@ -23,7 +23,7 @@ All the supported version control sites have support for running standalone code
 7. [BitBucket Snippets](https://bitbucket.org/snippets/shatgupt/jykE9)
 
 ## Supported Languages
-Language is detected based on the file extension. So for executing Python3 code, you will need py3 extension.
+Language is detected based on the file extension. So for executing `Python3` code, you will need `py3` extension.
 1. Nodejs 6
 2. Python 2
 3. Python 3
@@ -40,7 +40,7 @@ Latest versions of following browsers:
 
 [Edge has a non-standard WebExtension implementation](https://github.com/mozilla/webextension-polyfill/issues/3)
 
-## Permissions Requested
+## Permissions Requested by Extension
 1. Permissions for the above [supported websites](#supported-websites) to allow extension to run code directly from there
 2. `runmycode.online` - To auto-configure the extension
 3. `api.runmycode.online` - To run code from the extension

@@ -5,10 +5,10 @@ const config = {
     'common': {
       'name': 'RunMyCode Online',
       'short_name': 'RunMyCode',
-      'description': 'Run code online from sites like Github, Gitlab and more',
+      'description': 'Run code online directly from Github, Gitlab, Bitbucket and more.',
       'author': 'Shatrughn Gupta',
       'homepage_url': 'https://runmycode.online',
-      'version': '1.6.0',
+      'version': '1.6.1',
       'icons': { '128': 'icon128.png' },
       'manifest_version': 2,
       'content_scripts': [
