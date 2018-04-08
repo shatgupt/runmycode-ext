@@ -4,7 +4,7 @@
   "description": "Browser extension to run code online from sites like Github, Gitlab and more",
   "scripts": {
     "test": "standard",
-    "build": "./build.js"
+    "build": "node ./build.js"
   },
   "author": "Shatrughn Gupta",
   "license": "MIT",

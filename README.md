@@ -31,6 +31,8 @@ Language is detected based on the file extension. So for executing `Python3` cod
 5. PHP 7
 6. Go
 7. Java 1.8
+8. C
+9. C++
 
 ## Supported Browsers
 Latest versions of following browsers:

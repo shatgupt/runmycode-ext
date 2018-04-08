@@ -23,7 +23,9 @@
     rb: 'ruby',
     php: 'php',
     java: 'java',
-    go: 'go'
+    go: 'go',
+    c: 'c',
+    cpp: 'cpp'
   }
 
   const displayLangMap = {
@@ -33,7 +35,9 @@
     ruby: 'Ruby',
     php: 'PHP',
     java: 'Java',
-    go: 'Go'
+    go: 'Go',
+    c: 'C',
+    cpp: 'C++'
   }
 
   const $ = (s, elem = document) => elem.querySelector(s)
