@@ -22,7 +22,7 @@
     js: 'nodejs',
     rb: 'ruby',
     php: 'php',
-    // java: 'java',
+    java: 'java',
     go: 'go'
   }
 
