@@ -30,7 +30,7 @@ Language is detected based on the file extension. So for executing `Python3` cod
 4. Ruby 2.2
 5. PHP 7
 6. Go
-7. Java 1.8 (not enabled in published version)
+7. Java 1.8
 
 ## Supported Browsers
 Latest versions of following browsers:
