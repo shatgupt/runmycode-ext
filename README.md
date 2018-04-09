@@ -1,6 +1,6 @@
 # RunMyCode Online WebExtension
 
-> Browser extension to run code online directly from Github, Gitlab, Bitbucket and more - [https://runmycode.online](https://runmycode.online)
+> Compile and run C, C++, Java, Nodejs, Python, Ruby, Go and PHP code online, directly from Github, Gitlab, Bitbucket and more - [https://runmycode.online](https://runmycode.online)
 
 [![RunMyCode Online Screenshot](screenshot.png?raw=true)](https://www.youtube.com/watch?v=iwz8n3v7QVY "RunMyCode Online Introduction video on YouTube")
 
@@ -23,16 +23,16 @@ All the supported version control sites have support for running standalone code
 7. [BitBucket Snippets](https://bitbucket.org/snippets/shatgupt/jykE9)
 
 ## Supported Languages
-Language is detected based on the file extension. So for executing `Python3` code, you will need `py3` extension.
-1. Nodejs 6
-2. Python 2
-3. Python 3
-4. Ruby 2.2
-5. PHP 7
-6. Go
-7. Java 1.8
-8. C
-9. C++
+Language is detected based on the file extension. So for executing `Python3` code, you will need `py3` extension, `cpp` for C++.
+1. C (GCC 7.2)
+2. C++ (GCC 7.2)
+3. Java 8
+4. Node.js 6.10
+5. Python 2.7
+6. Python 3.6
+7. Ruby 2.2
+8. Go 1.7
+9. PHP 7
 
 ## Supported Browsers
 Latest versions of following browsers:
