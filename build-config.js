@@ -8,7 +8,7 @@ const config = {
       'description': 'Compile and run C, C++, Java, Nodejs, Python, Ruby, Go and PHP code online, directly from Github, Gitlab, Bitbucket and more.',
       'author': 'Shatrughn Gupta',
       'homepage_url': 'https://runmycode.online',
-      'version': '1.6.3',
+      'version': '1.6.4',
       'icons': { '128': 'icon128.png' },
       'manifest_version': 2,
       'content_scripts': [
