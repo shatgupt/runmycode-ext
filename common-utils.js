@@ -26,7 +26,8 @@
     go: 'go',
     c: 'c',
     cpp: 'cpp',
-    kt: 'kotlin'
+    kt: 'kotlin',
+    scala: 'scala'
   }
 
   const displayLangMap = {
@@ -39,7 +40,8 @@
     go: 'Go',
     c: 'C',
     cpp: 'C++',
-    kotlin: 'Kotlin'
+    kotlin: 'Kotlin',
+    scala: 'Scala'
   }
 
   const $ = (s, elem = document) => elem.querySelector(s)
