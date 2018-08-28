@@ -33,6 +33,8 @@ Language is detected based on the file extension. So for executing `Python3` cod
 7. Ruby 2.2
 8. Go 1.7
 9. PHP 7
+10. Kotlin
+11. Scala
 
 ## Supported Browsers
 Latest versions of following browsers:
