@@ -50,7 +50,7 @@ const restoreOptions = () => {
   const getApiKey = browser.storage.local.get('apiKey')
   Promise.all([getApiUrl, getApiKey])
   .then((result) => {
-    apiUrl.value = result[0]['apiUrl'] || 'https://api.runmycode.online/run'
+    apiUrl.value = result[0]['apiUrl'] || defaultAPIURL
     apiKey.value = result[1]['apiKey'] || ''
     saveOptions()
   })

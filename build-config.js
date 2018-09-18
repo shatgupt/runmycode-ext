@@ -5,10 +5,10 @@ const config = {
     'common': {
       'name': 'RunMyCode Online',
       'short_name': 'RunMyCode',
-      'description': 'Compile and run C, C++, Java, Nodejs, Python, Ruby, Go and PHP code online, directly from Github, Gitlab, Bitbucket and more.',
+      'description': 'RunMyCode Online is a free and open-source tool to compile and run code online directly from Github, Gitlab, Bitbucket, and GoByExample.',
       'author': 'Shatrughn Gupta',
       'homepage_url': 'https://runmycode.online',
-      'version': '1.6.5',
+      'version': '1.6.7',
       'icons': { '128': 'icon128.png' },
       'manifest_version': 2,
       'content_scripts': [

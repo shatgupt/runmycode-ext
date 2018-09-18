@@ -1,10 +1,10 @@
 'use strict'
 
+const defaultAPIURL = 'https://api.runmycode.online/run'
 let user = localStorage.getItem('runmycode')
 if (user) {
   user = JSON.parse(user)
   if (user.key) {
-    const defaultAPIURL = 'https://api.runmycode.online/run'
     browser.storage.local.get('apiUrl').then((res) => {
       let apiUrl = res['apiUrl']
       if (!apiUrl) apiUrl = defaultAPIURL // set default value if not set
