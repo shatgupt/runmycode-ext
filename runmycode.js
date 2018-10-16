@@ -56,9 +56,11 @@
         runBtn.textContent = 'Run'
         runBtn.disabled = false
         const langName = displayLangMap[lang]
-        runBtn.setAttribute('title', `Run ${filename}(${langName})`)
-        runOutput.setAttribute('title', `Output from ${filename}(${langName})`)
-        runOutput.setAttribute('placeholder', `Output from ${filename}(${langName})`)
+        runBtn.setAttribute('title', `Run ${filename} (${langName})`)
+        runInput.setAttribute('title', `STDIN to ${filename} (${langName})`)
+        runInput.setAttribute('placeholder', `STDIN to ${filename} (${langName})`)
+        runOutput.setAttribute('title', `Output from ${filename} (${langName})`)
+        runOutput.setAttribute('placeholder', `Output from ${filename} (${langName})`)
       })
     })
   }
