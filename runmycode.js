@@ -205,7 +205,7 @@
       runBtn.textContent = 'Running'
       runBtn.disabled = true // disable run button
       runOutput.classList.remove('error')
-      runOutput.value = `Running ${filename}(${displayLangMap[lang]})`
+      runOutput.value = `Running ${filename} (${displayLangMap[lang]})`
       $('#output-panel').classList.add('in')
     }
 

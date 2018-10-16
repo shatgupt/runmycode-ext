@@ -17,7 +17,13 @@
     btnContainer.insertBefore(
       buildDomElement(
         ['div', {'class': 'btn-group'},
-          ['a', {'class': 'btn btn-warning runmycode-popup-runner', 'data-filename': fileName, 'data-lang': getLangFromFileName(fileName)},
+          ['a',
+            {
+              'class': 'btn btn-warning runmycode-popup-runner',
+              'href': '#',
+              'data-filename': fileName,
+              'data-lang': getLangFromFileName(fileName)
+            },
             'Run'
           ]
         ]

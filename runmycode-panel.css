@@ -125,12 +125,12 @@
 }
 
 #runmycode:disabled {
-  color: #696969;
-  font-weight: normal;
-  background-color: rgba(252, 148, 3, 0.5);
-  box-shadow: none;
+  color: white !important;
+  font-weight: bold !important;
+  background-color: rgba(252, 148, 3, 0.5) !important;
+  box-shadow: none !important;
   pointer-events: none !important;
-  cursor: not-allowed;
+  cursor: not-allowed !important;
 }
 
 #runmycode-run-input, #runmycode-run-output {
