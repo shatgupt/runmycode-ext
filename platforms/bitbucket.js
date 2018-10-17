@@ -15,8 +15,15 @@
     if ($('.runmycode-popup-runner', btnContainer)) return
     btnContainer.insertBefore(
       buildDomElement(
-        ['div', {'class': 'aui-buttons'},
-          ['button', {'class': 'aui-button aui-button-primary runmycode-popup-runner', 'style': 'font-weight: normal;', 'data-filename': fileName, 'data-lang': getLangFromFileName(fileName)},
+        ['div',
+          {'class': 'aui-buttons'},
+          ['button',
+            {
+              'class': 'aui-button aui-button-primary runmycode-popup-runner',
+              'style': 'font-weight: normal;',
+              'data-filename': fileName,
+              'data-lang': getLangFromFileName(fileName)
+            },
             'Run'
           ]
         ]
@@ -102,8 +109,15 @@
     injectRunButton: (btnContainer, fileName) => {
       if ($('.runmycode-popup-runner', btnContainer)) return
       btnContainer.appendChild(buildDomElement(
-        ['div', {'class': 'bb-content-container-item aui-buttons'},
-          ['button', {'class': 'aui-button aui-button-primary runmycode-popup-runner', 'style': 'font-weight: normal;', 'data-filename': fileName, 'data-lang': getLangFromFileName(fileName)},
+        ['div',
+          {'class': 'bb-content-container-item aui-buttons'},
+          ['button',
+            {
+              'class': 'aui-button aui-button-primary runmycode-popup-runner',
+              'style': 'font-weight: normal;',
+              'data-filename': fileName,
+              'data-lang': getLangFromFileName(fileName)
+            },
             'Run'
           ]
         ])

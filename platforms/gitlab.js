@@ -16,7 +16,8 @@
     if ($('.runmycode-popup-runner', btnContainer)) return
     btnContainer.insertBefore(
       buildDomElement(
-        ['div', {'class': 'btn-group'},
+        ['div',
+          {'class': 'btn-group'},
           ['a',
             {
               'class': 'btn btn-warning runmycode-popup-runner',
@@ -104,14 +105,18 @@
       // shorten input box to accommodate open runner button
       Object.assign(fileNameInput.style, {display: 'inline-block', width: '60%'})
       btnContainer.appendChild(
-        buildDomElement(['input', {
-          'type': 'button',
-          'class': 'btn btn-warning runmycode-popup-runner',
-          'style': 'float: right; font-weight: bold;',
-          'value': 'Run',
-          'data-filename': fileName,
-          'data-lang': getLangFromFileName(fileName)
-        }])
+        buildDomElement(
+          ['input',
+            {
+              'type': 'button',
+              'class': 'btn btn-warning runmycode-popup-runner',
+              'style': 'float: right; font-weight: bold;',
+              'value': 'Run',
+              'data-filename': fileName,
+              'data-lang': getLangFromFileName(fileName)
+            }
+          ]
+        )
       )
     },
     removeRunButton: (openRunnerBtn) => { openRunnerBtn.outerHTML = '' },

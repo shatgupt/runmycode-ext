@@ -16,8 +16,14 @@
     if ($('.runmycode-popup-runner', btnContainer)) return
     btnContainer.insertBefore(
       buildDomElement(
-        ['div', {'class': 'BtnGroup'},
-          ['a', {'class': 'btn btn-sm BtnGroup-item btn-purple runmycode-popup-runner', 'data-filename': fileName, 'data-lang': getLangFromFileName(fileName)},
+        ['div',
+          {'class': 'BtnGroup'},
+          ['a',
+            {
+              'class': 'btn btn-sm BtnGroup-item btn-purple runmycode-popup-runner',
+              'data-filename': fileName,
+              'data-lang': getLangFromFileName(fileName)
+            },
             'Run'
           ]
         ]
@@ -66,7 +72,12 @@
     if ($('.runmycode-popup-runner', btnContainer)) return
     btnContainer.insertBefore(
       buildDomElement(
-        ['a', {'class': 'btn btn-sm btn-purple runmycode-popup-runner', 'data-filename': fileName, 'data-lang': getLangFromFileName(fileName)},
+        ['a',
+          {
+            'class': 'btn btn-sm btn-purple runmycode-popup-runner',
+            'data-filename': fileName,
+            'data-lang': getLangFromFileName(fileName)
+          },
           'Run'
         ]
       ),

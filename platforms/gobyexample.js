@@ -29,7 +29,12 @@
       const origAnchor = openRunnerBtn.parentNode
       origAnchor.parentNode.insertBefore(
         buildDomElement(
-          ['a', {'style': 'float: right; line-height: 1; margin-left: 10px;', 'title': 'Run this code in Go Playground', 'href': origAnchor.href},
+          ['a',
+            {
+              'style': 'float: right; line-height: 1; margin-left: 10px;',
+              'title': 'Run this code in Go Playground',
+              'href': origAnchor.href
+            },
             '#'
           ]
         ),
