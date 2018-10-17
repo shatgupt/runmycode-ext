@@ -60,6 +60,17 @@ const config = {
           'matches': ['https://runmycode.online/dashboard.html*'],
           'js': ['browser-polyfill.min.js', 'auto-configure.js'],
           'run-at': 'document_idle'
+        },
+        {
+          'matches': ['http://xahlee.info/*'],
+          'js': [
+            'browser-polyfill.min.js',
+            'common-utils.js',
+            'platforms/xahlee.js',
+            'runmycode.js'
+          ],
+          'css': ['runmycode-panel.css'],
+          'run-at': 'document_idle'
         }
       ],
       'background': {
@@ -90,7 +101,8 @@ const config = {
       'platforms/github.js',
       'platforms/gitlab.js',
       'platforms/bitbucket.js',
-      'platforms/gobyexample.js'
+      'platforms/gobyexample.js',
+      'platforms/xahlee.js'
     ]
   }
 }

@@ -47,7 +47,11 @@
         }
         runner.classList.remove('hidden')
         const openRunnerBtn = e.target
-        codeContainer = openRunnerBtn.closest(pageConf.containerSelector)
+        if (pageConf.getCodeContainer) {
+          codeContainer = pageConf.getCodeContainer(openRunnerBtn)
+        } else {
+          codeContainer = openRunnerBtn.closest(pageConf.containerSelector)
+        }
         lang = openRunnerBtn.dataset.lang
         filename = openRunnerBtn.dataset.filename
         runInput.value = ''
