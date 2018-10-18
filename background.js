@@ -54,7 +54,7 @@ const setPageActionActive = (tabId) => {
 
 const injectScripts = (tabId, domain) => {
   browser.tabs.executeScript({
-    file: '/browser-polyfill.js'
+    file: '/browser-polyfill.min.js'
   })
     .then(() => {
       return browser.tabs.executeScript({
@@ -83,6 +83,27 @@ const injectScripts = (tabId, domain) => {
     })
 }
 
+const addPermissionListener = () => {
+  browser.pageAction.onClicked.addListener((tab) => {
+    const url = tab.url.split('/')
+    const domain = url[2]
+    const permissionsToRequest = {
+      origins: [url[0] + '//' + domain + '/']
+    }
+
+    if (domain in locationMap && !domain.endsWith('github.com')) {
+      browser.permissions.contains(permissionsToRequest).then((hasPerm) => {
+        if (!hasPerm) {
+          browser.permissions.request(permissionsToRequest)
+            .then((response) => {
+              if (response) injectScripts(tab.id, domain)
+            })
+        }
+      })
+    }
+  })
+}
+
 // pass message to contentscript that url has changed
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   setPageActionUnsupported(tabId)
@@ -92,63 +113,32 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   const permissionsToRequest = {
     origins: [url[0] + '//' + domain + '/']
   }
+
   if (domain in locationMap) {
     if (domain.endsWith('github.com')) {
-      // we already have permissions for GitHub
+      // We have, by default, permission for GitHub
       setPageActionActive(tabId)
       browser.tabs.sendMessage(tabId, 'pageUpdated')
     } else {
-      browser.permissions.contains(permissionsToRequest).then((contains) => {
-        if (contains) {
-          console.log(`injecting since Already has required permissions:`, browser.permissions.getAll())
+      browser.permissions.contains(permissionsToRequest).then((hasPerm) => {
+        if (hasPerm) {
+          // Already got permission, inject required scripts and css
           injectScripts(tabId, domain)
         } else {
-          console.log(`no permission yet:`, browser.permissions.getAll())
+          // Supported but no permission yet
           setPageActionSupported(tabId)
+          addPermissionListener()
         }
       })
     }
   }
 })
 
-// Open the dashboard page on install so that extension can be configured automatically
+// Open the dashboard page on install so that the extension can configure itself
 browser.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
     browser.tabs.create({
       url: site + '/dashboard.html?ext-install=1'
-    })
-  }
-})
-
-browser.pageAction.onClicked.addListener((tab) => {
-  const url = tab.url.split('/')
-  const domain = url[2]
-  const permissionsToRequest = {
-    origins: [url[0] + '//' + domain + '/']
-  }
-
-  const onResponse = (response) => {
-    if (response) {
-      console.log('Permission was granted')
-      injectScripts(tab.id, domain)
-    } else {
-      console.log('Permission was refused')
-    }
-    return browser.permissions.getAll()
-  }
-
-  if (domain in locationMap) {
-    if (domain.endsWith('github.com')) return
-    browser.permissions.contains(permissionsToRequest).then((contains) => {
-      if (!contains) {
-        browser.permissions.request(permissionsToRequest)
-          .then(onResponse)
-          .then((currentPermissions) => {
-            console.log(`Current permissions:`, currentPermissions)
-          })
-      } else {
-        console.log(`Already has required permissions:`, browser.permissions.getAll())
-      }
     })
   }
 })
