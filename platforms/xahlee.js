@@ -7,6 +7,7 @@
   const buildDomElement = rmc.buildDomElement
   const getLangFromFileName = rmc.getLangFromFileName
   const langExtMap = rmc.langExtMap
+  let xlang, lang
 
   rmc.platforms.xahlee = {} // platform name should match whatever is defined in locationMap in common-utils.js
   const xahlee = rmc.platforms.xahlee
@@ -46,12 +47,13 @@
 
   xahlee.pages = {}
   xahlee.pages.show = {
+    // run button is added just after the pre for code
     getCodeContainer: (openRunnerBtn) => openRunnerBtn.previousSibling,
     hasSupportedLang: () => true, // always true for show page
     injectRunButtons: () => {
       $$('pre').forEach((codeContainer) => {
-        const xlang = codeContainer.classList[0]
-        const lang = xahlee.languages[xlang]
+        xlang = codeContainer.classList[0]
+        lang = xahlee.languages[xlang]
         if (!lang) return
         injectRunButton(codeContainer, lang + '.' + langExtMap[lang])
       })
