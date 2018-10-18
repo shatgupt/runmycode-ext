@@ -13,7 +13,8 @@
     'gitlab.com/snippets': 'gitlab_snippets',
     'bitbucket.org': 'bitbucket',
     'bitbucket.org/snippets': 'bitbucket_snippets',
-    'gobyexample.com': 'gobyexample'
+    'gobyexample.com': 'gobyexample',
+    'xahlee.info': 'xahlee'
   }
 
   const extMap = {
@@ -29,6 +30,9 @@
     kt: 'kotlin',
     scala: 'scala'
   }
+
+  // swap key, value from extMap
+  const langExtMap = Object.assign({}, ...Object.entries(extMap).map(([a, b]) => ({ [b]: a })))
 
   const displayLangMap = {
     python: 'Python2',
@@ -115,6 +119,7 @@
   rmc.$$ = $$
   rmc.buildDomElement = buildDomElement
   rmc.displayLangMap = displayLangMap
+  rmc.langExtMap = langExtMap
   rmc.getPlatform = getPlatform
   rmc.getFileNameFromElement = getFileNameFromElement
   rmc.getExtFromFileName = getExtFromFileName
