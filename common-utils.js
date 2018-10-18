@@ -6,6 +6,8 @@
 
   rmc.platforms = {}
 
+  // This locationMap is mirrored in background.js.
+  // Should always be synced to/from there after any change.
   const locationMap = {
     'github.com': 'github',
     'gist.github.com': 'github_gist',

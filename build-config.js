@@ -8,9 +8,13 @@ const config = {
       'description': 'RunMyCode Online is a free and open-source tool to compile and run code online directly from Github, Gitlab and Bitbucket.',
       'author': 'Shatrughn Gupta',
       'homepage_url': 'https://runmycode.online',
-      'version': '1.6.10',
+      'version': '1.7.0',
       'icons': { '128': 'icon128.png' },
       'manifest_version': 2,
+      'page_action': {
+        'default_icon': 'icon128.png',
+        'default_title': 'Click to allow RunMyCode extension on this site.'
+      },
       'content_scripts': [
         {
           'matches': ['https://github.com/*', 'https://gist.github.com/*'],
@@ -24,52 +28,8 @@ const config = {
           'run-at': 'document_idle'
         },
         {
-          'matches': ['https://gitlab.com/*'],
-          'js': [
-            'browser-polyfill.min.js',
-            'common-utils.js',
-            'platforms/gitlab.js',
-            'runmycode.js'
-          ],
-          'css': ['runmycode-panel.css'],
-          'run-at': 'document_idle'
-        },
-        {
-          'matches': ['https://bitbucket.org/*'],
-          'js': [
-            'browser-polyfill.min.js',
-            'common-utils.js',
-            'platforms/bitbucket.js',
-            'runmycode.js'
-          ],
-          'css': ['runmycode-panel.css'],
-          'run-at': 'document_idle'
-        },
-        {
-          'matches': ['https://gobyexample.com/*'],
-          'js': [
-            'browser-polyfill.min.js',
-            'common-utils.js',
-            'platforms/gobyexample.js',
-            'runmycode.js'
-          ],
-          'css': ['runmycode-panel.css'],
-          'run-at': 'document_idle'
-        },
-        {
           'matches': ['https://runmycode.online/dashboard.html*'],
           'js': ['browser-polyfill.min.js', 'auto-configure.js'],
-          'run-at': 'document_idle'
-        },
-        {
-          'matches': ['http://xahlee.info/*'],
-          'js': [
-            'browser-polyfill.min.js',
-            'common-utils.js',
-            'platforms/xahlee.js',
-            'runmycode.js'
-          ],
-          'css': ['runmycode-panel.css'],
           'run-at': 'document_idle'
         }
       ],
@@ -81,9 +41,18 @@ const config = {
         'page': 'options.html'
       },
       'permissions': [
-        'tabs',  // for detecting url change and page loading complete for SPA like Github
-        'storage',  // for storing API URL and key
-        'https://api.runmycode.online/' // for making CORS calls for code run and key gen/usage
+        // for detecting url change and page loading complete for single page apps like Github, BitBucket
+        'tabs',
+         // for storing API URL and key
+        'storage',
+        // for making CORS calls for code run and key gen/usage
+        'https://api.runmycode.online/'
+      ],
+      'optional_permissions': [
+        'https://gitlab.com/',
+        'https://bitbucket.org/',
+        'https://gobyexample.com/',
+        '*://xahlee.info/' // someday they might enable https
       ]
     }
   },
@@ -97,6 +66,8 @@ const config = {
       'common-utils.js',
       'runmycode-panel.css',
       'icon128.png',
+      'icon-active.png',
+      'icon-supported.png',
       'auto-configure.js',
       'platforms/github.js',
       'platforms/gitlab.js',
