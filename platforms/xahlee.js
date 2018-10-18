@@ -27,6 +27,7 @@
 
   const injectRunButton = (btnContainer, fileName) => {
     if (btnContainer.nextSibling.classList && btnContainer.nextSibling.classList.contains('runmycode-popup-runner')) return
+    // insert after the pre node
     btnContainer.parentNode.insertBefore(
       buildDomElement(
         ['a',
@@ -52,8 +53,7 @@
         const xlang = codeContainer.classList[0]
         const lang = xahlee.languages[xlang]
         if (!lang) return
-        const filename = lang + '.' + langExtMap[lang]
-        injectRunButton(codeContainer, filename)
+        injectRunButton(codeContainer, lang + '.' + langExtMap[lang])
       })
     },
     getCode: (codeContainer) => codeContainer.textContent
