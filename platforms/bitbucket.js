@@ -1,3 +1,4 @@
+/* global MutationObserver, CustomEvent */
 'use strict';
 
 ((window, document) => {
