@@ -43,7 +43,7 @@ const config = {
       'permissions': [
         // for detecting url change and page loading complete for single page apps like Github, BitBucket
         'tabs',
-         // for storing API URL and key
+        // for storing API URL and key
         'storage',
         // for making CORS calls for code run and key gen/usage
         'https://api.runmycode.online/'
@@ -52,7 +52,8 @@ const config = {
         'https://gitlab.com/',
         'https://bitbucket.org/',
         'https://gobyexample.com/',
-        '*://xahlee.info/' // someday they might enable https
+        '*://xahlee.info/', // someday they might enable https
+        '*://www.learntosolveit.com/'
       ]
     }
   },
@@ -73,7 +74,8 @@ const config = {
       'platforms/gitlab.js',
       'platforms/bitbucket.js',
       'platforms/gobyexample.js',
-      'platforms/xahlee.js'
+      'platforms/xahlee.js',
+      'platforms/learntosolveit.js'
     ]
   }
 }
