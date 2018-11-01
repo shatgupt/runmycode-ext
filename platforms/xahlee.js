@@ -9,7 +9,8 @@
   const langExtMap = rmc.langExtMap
   let xlang, lang
 
-  rmc.platforms.xahlee = {} // platform name should match whatever is defined in locationMap in common-utils.js
+  // platform name should match whatever is defined in locationMap in common-utils.js
+  rmc.platforms.xahlee = {}
   const xahlee = rmc.platforms.xahlee
 
   xahlee.languages = {
@@ -23,7 +24,7 @@
 
   xahlee.getPage = () => {
     const langSelector = 'pre.' + Object.keys(xahlee.languages).join(',pre.')
-    if ($(langSelector)) return 'show' // if any of the supported lanaguages exist on page
+    if ($(langSelector)) return 'show' // if any of the supported languages exist on page
   }
 
   const injectRunButton = (btnContainer, fileName) => {
