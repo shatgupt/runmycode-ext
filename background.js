@@ -91,7 +91,7 @@ const addPermissionListener = () => {
       origins: [url[0] + '//' + domain + '/']
     }
 
-    if (domain in locationMap && !domain.endsWith('github.com')) {
+    if (domain in locationMap && domain !== 'github.com' && domain !== 'gist.github.com') {
       browser.permissions.contains(permissionsToRequest).then((hasPerm) => {
         if (!hasPerm) {
           browser.permissions.request(permissionsToRequest)
@@ -115,7 +115,7 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 
   if (domain in locationMap) {
-    if (domain.endsWith('github.com')) {
+    if (domain === 'github.com' || domain === 'gist.github.com') {
       // We have, by default, permission for GitHub
       setPageActionActive(tabId)
       browser.tabs.sendMessage(tabId, 'pageUpdated')
