@@ -11,7 +11,8 @@ const locationMap = {
   'bitbucket.org': 'bitbucket',
   'bitbucket.org/snippets': 'bitbucket_snippets',
   'gobyexample.com': 'gobyexample',
-  'xahlee.info': 'xahlee'
+  'xahlee.info': 'xahlee',
+  'www.learntosolveit.com': 'learntosolveit'
 }
 
 const site = 'https://runmycode.online'
