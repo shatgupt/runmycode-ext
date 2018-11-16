@@ -28,7 +28,7 @@
   }
 
   const injectRunButton = (btnContainer, fileName) => {
-    if (btnContainer.nextSibling.classList && btnContainer.nextSibling.classList.contains('runmycode-popup-runner')) return
+    if (btnContainer.nextElementSibling.classList && btnContainer.nextElementSibling.classList.contains('runmycode-popup-runner')) return
     // insert after the pre node
     btnContainer.parentNode.insertBefore(
       buildDomElement(
@@ -42,14 +42,14 @@
           '▶ Run'
         ]
       ),
-      btnContainer.nextSibling
+      btnContainer.nextElementSibling
     )
   }
 
   xahlee.pages = {}
   xahlee.pages.show = {
     // run button is added just after the pre for code
-    getCodeContainer: (openRunnerBtn) => openRunnerBtn.previousSibling,
+    getCodeContainer: (openRunnerBtn) => openRunnerBtn.previousElementSibling,
     hasSupportedLang: () => true, // always true for show page
     injectRunButtons: () => {
       $$('pre').forEach((codeContainer) => {

@@ -21,7 +21,6 @@
 
   const langSelector = '.' + Object.keys(learntosolveit.languages).join(',.')
   learntosolveit.getPage = () => {
-    console.log('getpage', $(langSelector))
     if ($(langSelector)) return 'show' // if any of the supported languages exist on page
   }
 
