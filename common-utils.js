@@ -17,7 +17,8 @@
     'bitbucket.org/snippets': 'bitbucket_snippets',
     'gobyexample.com': 'gobyexample',
     'xahlee.info': 'xahlee',
-    'www.learntosolveit.com': 'learntosolveit'
+    'www.learntosolveit.com': 'learntosolveit',
+    'www.geeksforgeeks.org': 'geeksforgeeks'
   }
 
   const extMap = {

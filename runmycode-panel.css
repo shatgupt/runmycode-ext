@@ -50,6 +50,7 @@
   font-size: 14px;
   font-weight: 600;
   line-height: inherit;
+  clear: inherit;
 }
 
 #runmycode-runner .panel-title>a {
@@ -77,6 +78,7 @@
   line-height: 1;
   opacity: 0.3;
   padding: 0;
+  margin: 0;
   border: 0;
   background: transparent;
 }
@@ -138,6 +140,7 @@
   padding: 6px 10px;
   min-width: 100%;
   display: block;
+  margin: 0;
   font-size: 14px;
   color: inherit;
   line-height: normal;
