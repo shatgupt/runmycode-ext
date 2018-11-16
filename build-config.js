@@ -53,7 +53,8 @@ const config = {
         'https://bitbucket.org/',
         'https://gobyexample.com/',
         '*://xahlee.info/', // someday they might enable https
-        '*://www.learntosolveit.com/'
+        '*://www.learntosolveit.com/',
+        'https://www.geeksforgeeks.org/'
       ]
     }
   },
@@ -75,7 +76,8 @@ const config = {
       'platforms/bitbucket.js',
       'platforms/gobyexample.js',
       'platforms/xahlee.js',
-      'platforms/learntosolveit.js'
+      'platforms/learntosolveit.js',
+      'platforms/geeksforgeeks.js'
     ]
   }
 }
