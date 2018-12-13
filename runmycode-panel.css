@@ -51,6 +51,9 @@
   font-weight: 600;
   line-height: inherit;
   clear: inherit;
+  color: inherit;
+  text-transform: inherit;
+  text-shadow: inherit;
 }
 
 #runmycode-runner .panel-title>a {
