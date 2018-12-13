@@ -36,12 +36,28 @@
     if (pageLang && $('a.demo')) return 'show'
   }
 
+  // Java public classes require filename to be same as class name.
+  // Try best to extract it
+  tp.getFileName = (btn) => {
+    if (pageLang === 'java') {
+      // check if previous h3 element has filename
+      const prevText = btn.previousElementSibling.textContent
+      if (prevText.includes('.java')) return prevText
+      // try to extract from code, gets the first public class
+      const src = btn.nextElementSibling.textContent
+      const publicClassRegex = /public class (\w+)/g
+      const match = publicClassRegex.exec(src)
+      if (match !== null) return match[1] + '.java'
+    }
+    // if not Java, or everything else failed, return default filename
+    return pageLang + '.' + langExtMap[pageLang]
+  }
+
   tp.pages = {}
   tp.pages.show = {
     getCodeContainer: (openRunnerBtn) => openRunnerBtn.nextElementSibling,
     hasSupportedLang: () => true, // always true for show page
     injectRunButtons: () => {
-      const fileName = pageLang + '.' + langExtMap[pageLang]
       $$('a.demo').forEach((btn) => {
         if (btn.nextElementSibling.classList.contains('runmycode-popup-runner')) return
         btn.parentNode.insertBefore(
@@ -51,7 +67,7 @@
                 'class': 'demo runmycode-popup-runner',
                 'href': '#',
                 'style': 'right: 115px;',
-                'data-filename': fileName,
+                'data-filename': tp.getFileName(btn),
                 'data-lang': pageLang
               },
               'Run Here'
