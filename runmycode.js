@@ -280,8 +280,12 @@
           resetRunning()
         }
         if (apiUrl && key) {
-          const url = `${apiUrl}/${lang}?platform=${platform}&args=${encodeURIComponent(runInput.value)}`
-          callApi(url, key)
+          const urlArr = [
+            `${apiUrl}/${lang}?platform=${platform}`,
+            `filename=${encodeURIComponent(filename)}`,
+            `args=${encodeURIComponent(runInput.value)}`
+          ]
+          callApi(urlArr.join('&'), key)
         }
       }, (error) => {
         console.error('getCreds Error:', error)
