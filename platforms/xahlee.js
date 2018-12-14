@@ -7,6 +7,7 @@
   const buildDomElement = rmc.buildDomElement
   const getLangFromFileName = rmc.getLangFromFileName
   const langExtMap = rmc.langExtMap
+  const getJavaPublicClassFileName = rmc.getJavaPublicClassFileName
   let xlang, lang
 
   // platform name should match whatever is defined in locationMap in common-utils.js
@@ -25,6 +26,15 @@
   xahlee.getPage = () => {
     const langSelector = 'pre.' + Object.keys(xahlee.languages).join(',pre.')
     if ($(langSelector)) return 'show' // if any of the supported languages exist on page
+  }
+
+  const getFileName = (codeContainer, pageLang) => {
+    if (pageLang === 'java') {
+      const fname = getJavaPublicClassFileName(codeContainer.textContent)
+      if (fname) return fname
+    }
+    // if not Java, or everything else failed, return default filename
+    return pageLang + '.' + langExtMap[pageLang]
   }
 
   const injectRunButton = (btnContainer, fileName) => {
@@ -56,7 +66,7 @@
         xlang = codeContainer.classList[0]
         lang = xahlee.languages[xlang]
         if (!lang) return
-        injectRunButton(codeContainer, lang + '.' + langExtMap[lang])
+        injectRunButton(codeContainer, getFileName(codeContainer, lang))
       })
     },
     getCode: (codeContainer) => codeContainer.textContent
