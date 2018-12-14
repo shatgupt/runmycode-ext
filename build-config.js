@@ -54,7 +54,8 @@ const config = {
         'https://gobyexample.com/',
         '*://xahlee.info/', // someday they might enable https
         '*://www.learntosolveit.com/',
-        'https://www.geeksforgeeks.org/'
+        'https://www.geeksforgeeks.org/',
+        'https://www.tutorialspoint.com/'
       ]
     }
   },
@@ -77,7 +78,8 @@ const config = {
       'platforms/gobyexample.js',
       'platforms/xahlee.js',
       'platforms/learntosolveit.js',
-      'platforms/geeksforgeeks.js'
+      'platforms/geeksforgeeks.js',
+      'platforms/tutorialspoint.js'
     ]
   }
 }

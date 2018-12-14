@@ -6,6 +6,7 @@
 
   rmc.platforms = {}
 
+  // Maps supported sites to objects implementing the functionality
   // This locationMap is mirrored in background.js.
   // Should always be synced to/from there after any change.
   const locationMap = {
@@ -18,7 +19,8 @@
     'gobyexample.com': 'gobyexample',
     'xahlee.info': 'xahlee',
     'www.learntosolveit.com': 'learntosolveit',
-    'www.geeksforgeeks.org': 'geeksforgeeks'
+    'www.geeksforgeeks.org': 'geeksforgeeks',
+    'www.tutorialspoint.com': 'tutorialspoint'
   }
 
   const extMap = {

@@ -1,6 +1,7 @@
 /* global browser */
 'use strict'
 
+// Maps supported sites to objects implementing the functionality
 // This locationMap is mirrored from common-utils.js.
 // Should always be synced to/from there after any change.
 const locationMap = {
@@ -13,7 +14,8 @@ const locationMap = {
   'gobyexample.com': 'gobyexample',
   'xahlee.info': 'xahlee',
   'www.learntosolveit.com': 'learntosolveit',
-  'www.geeksforgeeks.org': 'geeksforgeeks'
+  'www.geeksforgeeks.org': 'geeksforgeeks',
+  'www.tutorialspoint.com': 'tutorialspoint'
 }
 
 const site = 'https://runmycode.online'
@@ -46,7 +48,7 @@ const setPageActionActive = (tabId) => {
   browser.pageAction.show(tabId)
   browser.pageAction.setTitle({
     tabId: tabId,
-    title: 'RunMyCode extension is running on this site.'
+    title: 'RunMyCode extension is active on this site.'
   })
   browser.pageAction.setIcon({
     tabId: tabId,
@@ -54,6 +56,7 @@ const setPageActionActive = (tabId) => {
   })
 }
 
+// Inject scripts and CSS to make it functional on the requested domain
 const injectScripts = (tabId, domain) => {
   browser.tabs.executeScript({
     file: '/browser-polyfill.min.js'
@@ -85,6 +88,7 @@ const injectScripts = (tabId, domain) => {
     })
 }
 
+// Listen for user's request of adding permission for the current domain
 const addPermissionListener = () => {
   browser.pageAction.onClicked.addListener((tab) => {
     const url = tab.url.split('/')
@@ -117,8 +121,8 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 
   if (domain in locationMap) {
+    // By default we have permission for GitHub
     if (domain === 'github.com' || domain === 'gist.github.com') {
-      // We have, by default, permission for GitHub
       setPageActionActive(tabId)
       browser.tabs.sendMessage(tabId, 'pageUpdated')
     } else {
