@@ -6,6 +6,7 @@
   const $$ = rmc.$$
   const langExtMap = rmc.langExtMap
   const buildDomElement = rmc.buildDomElement
+  const getJavaPublicClassFileName = rmc.getJavaPublicClassFileName
 
   // platform name should match whatever is defined in locationMap in common-utils.js
   rmc.platforms.tutorialspoint = {}
@@ -46,10 +47,8 @@
       const prevText = demoBtn.previousElementSibling.textContent
       if (prevText.includes('.java')) return prevText
       // try to extract from code, gets the first public class
-      const src = demoBtn.nextElementSibling.textContent
-      const publicClassRegex = /public class (\w+)/g
-      const match = publicClassRegex.exec(src)
-      if (match !== null) return match[1] + '.java'
+      const fname = getJavaPublicClassFileName(demoBtn.nextElementSibling.textContent)
+      if (fname) return fname
     }
     // if not Java, or everything else failed, return default filename
     return pageLang + '.' + langExtMap[pageLang]

@@ -120,6 +120,13 @@
     return parentNode
   }
 
+  // Java public classes require filename to be same as class name.
+  // Try best to extract from source code. Uses the first public class name.
+  const getJavaPublicClassFileName = (src) => {
+    const match = (/public class (\w+)/g).exec(src)
+    if (match !== null) return match[1] + '.java'
+  }
+
   // export
   rmc.$ = $
   rmc.$$ = $$
@@ -131,4 +138,5 @@
   rmc.getExtFromFileName = getExtFromFileName
   rmc.getLangFromFileName = getLangFromFileName
   rmc.getCodeFromLines = getCodeFromLines
+  rmc.getJavaPublicClassFileName = getJavaPublicClassFileName
 })(window, document)
