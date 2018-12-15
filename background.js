@@ -86,6 +86,9 @@ const injectScripts = (tabId, domain) => {
       browser.tabs.sendMessage(tabId, 'pageUpdated')
       setPageActionActive(tabId)
     })
+    .catch((err) => {
+      console.error('Error in injectScripts for domain', domain, err.message)
+    })
 }
 
 // Listen for user's request of adding permission for the current domain
@@ -96,23 +99,21 @@ const addPermissionListener = () => {
     const permissionsToRequest = {
       origins: [url[0] + '//' + domain + '/']
     }
-
     if (domain in locationMap && domain !== 'github.com' && domain !== 'gist.github.com') {
-      browser.permissions.contains(permissionsToRequest).then((hasPerm) => {
-        if (!hasPerm) {
-          browser.permissions.request(permissionsToRequest)
-            .then((response) => {
-              if (response) injectScripts(tab.id, domain)
-            })
-        }
-      })
+      browser.permissions.request(permissionsToRequest)
+        .then((response) => {
+          if (response) injectScripts(tab.id, domain)
+        })
+        .catch((err) => {
+          console.error('Error in requesting permission for domain', domain, err.message)
+        })
     }
   })
 }
 
 // pass message to contentscript that url has changed
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  setPageActionUnsupported(tabId)
+  // setPageActionUnsupported(tabId)
   if (changeInfo.status !== 'complete') return
   const url = tab.url.split('/')
   const domain = url[2]

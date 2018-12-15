@@ -13,7 +13,7 @@ const config = {
       'manifest_version': 2,
       'page_action': {
         'default_icon': 'icon128.png',
-        'default_title': 'Click to allow RunMyCode extension on this site.'
+        'default_title': 'This site is not yet supported by RunMyCode.'
       },
       'content_scripts': [
         {
