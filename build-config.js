@@ -8,7 +8,7 @@ const config = {
       'description': 'RunMyCode Online is a free and open-source tool to compile and run code online directly from Github, Gitlab and Bitbucket.',
       'author': 'Shatrughn Gupta',
       'homepage_url': 'https://runmycode.online',
-      'version': '1.7.0',
+      'version': '2.0.0',
       'icons': { '128': 'icon128.png' },
       'manifest_version': 2,
       'page_action': {
@@ -45,7 +45,7 @@ const config = {
         'tabs',
         // for storing API URL and key
         'storage',
-        // for making CORS calls for code run and key gen/usage
+        // for making CORS calls for code run and key gen
         'https://api.runmycode.online/'
       ],
       'optional_permissions': [

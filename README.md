@@ -17,10 +17,13 @@ All the supported version control sites have support for running standalone code
 1. [Github](https://github.com/shatgupt/runmycode-test/blob/master/ruby.rb)
 2. [Gitlab](https://gitlab.com/shatgupt/runmycode-test/blob/master/ruby.rb)
 3. [BitBucket](https://bitbucket.org/shatgupt/runmycode-test/src/c9cda15cb3fa1144e53f199e6ac6003ee5bdb25b/ruby.rb)
-4. [Go by Example](https://gobyexample.com/hello-world)
-5. [Github Gist](https://gist.github.com/shatgupt/b76ebbf67c6a38d0decb686ff230dd04)
-6. [Gitlab Snippets](https://gitlab.com/snippets/1664532)
-7. [BitBucket Snippets](https://bitbucket.org/snippets/shatgupt/jykE9)
+4. [Github Gist](https://gist.github.com/shatgupt/b76ebbf67c6a38d0decb686ff230dd04)
+5. [Gitlab Snippets](https://gitlab.com/snippets/1664532)
+6. [BitBucket Snippets](https://bitbucket.org/snippets/shatgupt/jykE9)
+7. [Go by Example](https://gobyexample.com/hello-world)
+8. [Xahlee](http://xahlee.info/php/list_basics.html)
+9. [Learn To Solve It](http://www.learntosolveit.com/ruby/forloop.html)
+10. [Tutorials Point](https://www.tutorialspoint.com/python3/python_basic_syntax.htm)
 
 ## Supported Languages
 Language is detected based on the file extension. So for executing `Python3` code, you will need `py3` extension, `cpp` for C++.
@@ -45,7 +48,9 @@ Latest versions of following browsers:
 [Edge has a non-standard WebExtension implementation](https://github.com/mozilla/webextension-polyfill/issues/3)
 
 ## Permissions Requested by Extension
-1. Permissions for the above [supported websites](#supported-websites) to allow extension to run code directly from there
+__Starting with v2.0.0, RMCO only asks permission for GitHub by default. All other websites are optional and can be allowed on demand.__
+
+1. Optional permissions for the above [supported websites](#supported-websites) to allow extension to run code directly from there
 2. `runmycode.online` - To auto-configure the extension
 3. `api.runmycode.online` - To run code from the extension
 4. `tabs` - For detecting url change and page loading complete for single page apps like Github, Bitbucket
