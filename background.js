@@ -99,15 +99,13 @@ const addPermissionListener = () => {
     const permissionsToRequest = {
       origins: [url[0] + '//' + domain + '/']
     }
-    if (domain in locationMap && domain !== 'github.com' && domain !== 'gist.github.com') {
-      browser.permissions.request(permissionsToRequest)
-        .then((response) => {
-          if (response) injectScripts(tab.id, domain)
-        })
-        .catch((err) => {
-          console.error('Error in requesting permission for domain', domain, err.message)
-        })
-    }
+    browser.permissions.request(permissionsToRequest)
+      .then((response) => {
+        if (response) injectScripts(tab.id, domain)
+      })
+      .catch((err) => {
+        console.error('Error in requesting permission for domain', domain, err.message)
+      })
   })
 }
 
