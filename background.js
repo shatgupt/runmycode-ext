@@ -61,51 +61,66 @@ const injectScripts = (tabId, domain) => {
   browser.tabs.executeScript({
     file: '/browser-polyfill.min.js'
   })
-    .then(() => {
-      return browser.tabs.executeScript({
-        file: '/common-utils.js'
-      })
+  .then(() => {
+    return browser.tabs.executeScript({
+      file: '/common-utils.js'
     })
-    .then(() => {
-      const platform = locationMap[domain].split('_')[0]
-      return browser.tabs.executeScript({
-        file: `/platforms/${platform}.js`
-      })
+  })
+  .then(() => {
+    const platform = locationMap[domain].split('_')[0]
+    return browser.tabs.executeScript({
+      file: `/platforms/${platform}.js`
     })
-    .then(() => {
-      return browser.tabs.executeScript({
-        file: '/runmycode.js'
-      })
+  })
+  .then(() => {
+    return browser.tabs.executeScript({
+      file: '/runmycode.js'
     })
-    .then(() => {
-      return browser.tabs.insertCSS({
-        file: '/runmycode-panel.css'
-      })
+  })
+  .then(() => {
+    return browser.tabs.insertCSS({
+      file: '/runmycode-panel.css'
     })
-    .then(() => {
-      browser.tabs.sendMessage(tabId, 'pageUpdated')
-      setPageActionActive(tabId)
-    })
-    .catch((err) => {
-      console.error('Error in injectScripts for domain', domain, err.message)
-    })
+  })
+  .then(() => {
+    browser.tabs.sendMessage(tabId, 'pageUpdated')
+    setPageActionActive(tabId)
+  })
+  .catch((err) => {
+    console.error('Error in injectScripts for domain', domain, err.message)
+  })
 }
 
 // Listen for user's request of adding permission for the current domain
+let permissionListenerAdded = false
 const addPermissionListener = () => {
+  console.log('addPermissionListener called')
+  // Don't added another one on page navigation
+  if (permissionListenerAdded) return
+  console.log('addPermissionListener added')
+  permissionListenerAdded = true
+  let clicked = false
+
   browser.pageAction.onClicked.addListener((tab) => {
+    console.log('pageAction.onClicked called')
+    // Not sure how it is happening, but lets avoid multiple clicks
+    if (clicked) return
+    clicked = true
     const url = tab.url.split('/')
     const domain = url[2]
     const permissionsToRequest = {
       origins: [url[0] + '//' + domain + '/']
     }
+
     browser.permissions.request(permissionsToRequest)
-      .then((response) => {
-        if (response) injectScripts(tab.id, domain)
-      })
-      .catch((err) => {
-        console.error('Error in requesting permission for domain', domain, err.message)
-      })
+    .then((response) => {
+      if (response) injectScripts(tab.id, domain)
+      else clicked = false
+    })
+    .catch((err) => {
+      console.error('Error in requesting permission for domain', domain, err.message)
+      clicked = false
+    })
   })
 }
 
