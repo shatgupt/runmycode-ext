@@ -46,11 +46,13 @@
     }
   }
 
+  // div.Box.position-relative > div.Box-header > div.d-flex > div.BtnGroup
+
   github.pages = {}
   github.pages.show = {
     containerSelector: '.repository-content',
     fileNameSelector: '.final-path',
-    runButtonContainer: '.file-actions',
+    runButtonContainer: '.Box.position-relative > .Box-header > .d-flex',
     injectRunButton: githubInjectRunButton,
     getCode: (codeContainer) => getCodeFromLines($$('.blob-wrapper table td.blob-code', codeContainer))
   }
